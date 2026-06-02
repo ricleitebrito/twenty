@@ -45,12 +45,26 @@ export const STANDARD_NAVIGATION_MENU_ITEMS = {
       STANDARD_OBJECTS.dashboard.views.allDashboards.universalIdentifier,
     position: 5,
   },
+  allProducts: {
+    universalIdentifier: 'da7bc5fe-e40a-4597-8491-1fd05dfcd88a',
+    type: NavigationMenuItemType.OBJECT,
+    viewUniversalIdentifier:
+      STANDARD_OBJECTS.product.views.allProducts.universalIdentifier,
+    position: 6,
+  },
+  allPriceCatalogs: {
+    universalIdentifier: 'cf1943b0-edea-47dd-88f2-edf066b2edae',
+    type: NavigationMenuItemType.OBJECT,
+    viewUniversalIdentifier:
+      STANDARD_OBJECTS.priceCatalog.views.allPriceCatalogs.universalIdentifier,
+    position: 7,
+  },
   workflowsFolder: {
     universalIdentifier: '20202020-b007-4b07-8b07-c0aba11c0007',
     type: NavigationMenuItemType.FOLDER,
     name: 'Workflows',
     icon: 'IconSettingsAutomation',
-    position: 6,
+    position: 8,
   },
   workflowsFolderAllWorkflows: {
     universalIdentifier: '20202020-b008-4b08-8b08-c0aba11c0008',
@@ -87,6 +101,8 @@ export const STANDARD_NAVIGATION_MENU_ITEM_DEFAULT_COLORS: Partial<
   allTasks: 'turquoise',
   allNotes: 'turquoise',
   allOpportunities: 'red',
+  allProducts: 'green',
+  allPriceCatalogs: 'yellow',
   workflowsFolder: 'orange',
   allDashboards: 'gray',
   workflowsFolderAllWorkflows: 'gray',

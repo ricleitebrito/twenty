@@ -2727,6 +2727,219 @@ export const STANDARD_OBJECTS = {
       },
     },
   },
+  product: {
+    universalIdentifier: 'afef81d4-61ad-4df8-9b25-66563cf37f98',
+    fields: {
+      id: { universalIdentifier: 'b9b90526-9aae-4ddc-b1bd-01f1f1bb21e6' },
+      createdAt: {
+        universalIdentifier: '085eb85c-667e-4d78-94db-4f0aa08fab22',
+      },
+      updatedAt: {
+        universalIdentifier: '07f6f6bd-9a5e-4360-bfff-66bfd5184311',
+      },
+      deletedAt: {
+        universalIdentifier: 'a90c652c-bd11-4a46-bb5b-f056f2347110',
+      },
+      name: { universalIdentifier: 'd070d854-2709-460d-8cfb-2034f20653fa' },
+      productCode: {
+        universalIdentifier: 'a43da5d6-b596-4fce-9372-4e81acd7fa33',
+      },
+      description: {
+        universalIdentifier: 'fead05e6-9995-43b9-8631-c16c3fdbc9d7',
+      },
+      family: { universalIdentifier: '05a7f37e-724f-4b2f-a3c7-ac1b29d86361' },
+      isActive: {
+        universalIdentifier: '9ef7b8ca-ed6a-4bb8-b59d-b7e2bb8d9502',
+      },
+      unitOfMeasure: {
+        universalIdentifier: 'b09edade-bd32-4b96-b8cb-dd1508981685',
+      },
+      position: {
+        universalIdentifier: 'd7b02a3a-5f93-4217-802c-239d90b4dc95',
+      },
+      createdBy: {
+        universalIdentifier: '190e8412-63c9-4370-91fb-01cba1436bb4',
+      },
+      updatedBy: {
+        universalIdentifier: '2af81f03-0106-40ff-807b-4b01aa2b6a69',
+      },
+      searchVector: {
+        universalIdentifier: '801f9b81-598f-4402-9993-75fc64062e99',
+      },
+      priceCatalogEntries: {
+        universalIdentifier: '3ca350df-bbab-4d2a-b230-bd6f9c57ca11',
+      },
+    },
+    indexes: {
+      searchVectorGinIndex: {
+        universalIdentifier: '7086dd83-5f4e-4876-afe3-a5deafce5483',
+      },
+    },
+    views: {
+      allProducts: {
+        universalIdentifier: '86c360b8-139d-4e2e-996d-d3956c0ba514',
+        viewFields: {
+          name: {
+            universalIdentifier: '832a80a3-ea81-405b-b170-59caff85dd5a',
+          },
+          productCode: {
+            universalIdentifier: '3edd9e0f-f208-49d9-af3b-0ef2fd817628',
+          },
+          family: {
+            universalIdentifier: '8488888e-8744-4883-a75c-70907f1ad001',
+          },
+          isActive: {
+            universalIdentifier: '84bd9e64-b642-4c38-a510-8b4fa9d8cfd2',
+          },
+          unitOfMeasure: {
+            universalIdentifier: '366b2f20-7676-4268-ab9f-1480a937bd33',
+          },
+          createdAt: {
+            universalIdentifier: '208ecfcb-d6cf-4262-84f2-31dd2aedcb0f',
+          },
+        },
+      },
+    },
+  },
+  priceCatalog: {
+    universalIdentifier: '438f82ee-2ee0-4692-878a-7fbc4f8ad1d0',
+    fields: {
+      id: { universalIdentifier: 'be3588f0-f12e-4b76-855e-7c38270e10bd' },
+      createdAt: {
+        universalIdentifier: '9851f835-60bd-4110-8950-09a4b9529a45',
+      },
+      updatedAt: {
+        universalIdentifier: 'b4795a00-7949-47c5-84e8-2c14d23cb098',
+      },
+      deletedAt: {
+        universalIdentifier: '16ad5fb5-6efb-40da-9f09-5145ab31eb15',
+      },
+      name: { universalIdentifier: 'c333e3f3-07cf-4085-8260-bdcf2f6649dd' },
+      description: {
+        universalIdentifier: '70288b97-60fd-4613-bf25-7d14ac3cb281',
+      },
+      isActive: {
+        universalIdentifier: '488f6fb9-804e-4e82-8c67-1a330cf1229a',
+      },
+      isStandard: {
+        universalIdentifier: '02a84375-5a16-42b2-acf1-bd15026762e4',
+      },
+      position: {
+        universalIdentifier: 'bbce2e90-fd2c-4a4d-ae71-80722ba07b6c',
+      },
+      createdBy: {
+        universalIdentifier: 'be7418a8-7cc3-4c2d-b900-8a3c229ec9e4',
+      },
+      updatedBy: {
+        universalIdentifier: '0d2f95b8-9f11-4862-8509-bbde590a3de6',
+      },
+      searchVector: {
+        universalIdentifier: '73db4f08-eb59-459c-9d8d-0ee6e718a850',
+      },
+      priceCatalogEntries: {
+        universalIdentifier: '42252fcf-66a6-4801-a434-c64c94704d26',
+      },
+    },
+    indexes: {
+      searchVectorGinIndex: {
+        universalIdentifier: '0aabd6bd-7104-478a-ac89-6325350fcdb1',
+      },
+    },
+    views: {
+      allPriceCatalogs: {
+        universalIdentifier: 'f0c06b0a-e5de-4b90-b4a8-6f39911d6c93',
+        viewFields: {
+          name: {
+            universalIdentifier: '1488a829-5195-4258-a2e1-1b316a6669ea',
+          },
+          isStandard: {
+            universalIdentifier: '97e4d697-0ea7-4586-84c4-ff00c606bb92',
+          },
+          isActive: {
+            universalIdentifier: '5c9b39f7-879d-46cf-950c-d2372a7ec0a1',
+          },
+          description: {
+            universalIdentifier: 'e8829089-f029-492c-98cb-a7365c963d6e',
+          },
+          createdAt: {
+            universalIdentifier: '986a204a-9a23-4696-886e-8e0bc7de2f01',
+          },
+        },
+      },
+    },
+  },
+  priceCatalogEntry: {
+    universalIdentifier: '48712d36-a4a4-404b-bed4-8131568cb409',
+    fields: {
+      id: { universalIdentifier: 'b486bdc7-c160-401d-a97a-29354cc16e16' },
+      createdAt: {
+        universalIdentifier: '002bfb87-c4e8-44e5-ba96-fe1d1f48590b',
+      },
+      updatedAt: {
+        universalIdentifier: '612f7e35-4a10-4ea7-ba07-8492d490c847',
+      },
+      deletedAt: {
+        universalIdentifier: '0bf551c1-b266-4278-8bfc-f2b6b22b25a7',
+      },
+      unitPrice: {
+        universalIdentifier: '55477bb5-0f9f-4bfc-ac23-74cd3c7a57fb',
+      },
+      isActive: {
+        universalIdentifier: 'c71041e6-5c2a-419f-bfa5-7006fe9b9591',
+      },
+      position: {
+        universalIdentifier: '6882d482-4e32-42e8-8015-22f388ee809b',
+      },
+      createdBy: {
+        universalIdentifier: '972d25ec-08fe-4050-9d66-d009e35c4221',
+      },
+      updatedBy: {
+        universalIdentifier: '9068bf2f-74eb-42a5-9633-7353ce3443c4',
+      },
+      product: {
+        universalIdentifier: '4e7c007a-04bd-432f-bf87-8d7ba756cfa0',
+      },
+      priceCatalog: {
+        universalIdentifier: '2770c2c7-c44d-461b-a555-cf2360149d9c',
+      },
+      searchVector: {
+        universalIdentifier: '46e0f80a-8001-46a0-b899-3f7168f8716c',
+      },
+    },
+    indexes: {
+      productIdIndex: {
+        universalIdentifier: '9cbf76f0-dc5b-4dd7-a82a-e3afe5666a50',
+      },
+      priceCatalogIdIndex: {
+        universalIdentifier: '5f3218c6-23a5-4176-bbbf-12d538922f43',
+      },
+      searchVectorGinIndex: {
+        universalIdentifier: 'cd9bfaec-63e1-4262-885c-639351b5f9d3',
+      },
+    },
+    views: {
+      allPriceCatalogEntries: {
+        universalIdentifier: 'e80dde96-786f-44b5-b079-a173c5bc6229',
+        viewFields: {
+          unitPrice: {
+            universalIdentifier: '25a913bb-472c-41b3-8dbc-9f05d41c6733',
+          },
+          product: {
+            universalIdentifier: 'ae590783-9e3c-43cc-bdaf-594d47782a1c',
+          },
+          priceCatalog: {
+            universalIdentifier: 'c42c5647-6496-47fa-b1a6-a039328abea1',
+          },
+          isActive: {
+            universalIdentifier: '8fc299f9-52bf-49ca-9af6-63c1d2b6d872',
+          },
+          createdAt: {
+            universalIdentifier: '952db481-c648-4dc3-bff3-486e07238fb3',
+          },
+        },
+      },
+    },
+  },
 } as const satisfies Record<
   string,
   {

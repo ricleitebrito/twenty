@@ -27,6 +27,9 @@ import { computeStandardWorkflowRunViewFields } from 'src/engine/workspace-manag
 import { computeStandardWorkflowVersionViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-workflow-version-view-fields.util';
 import { computeStandardWorkflowViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-workflow-view-fields.util';
 import { computeStandardWorkspaceMemberViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-workspace-member-view-fields.util';
+import { computeStandardProductViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-product-view-fields.util';
+import { computeStandardPriceCatalogViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-price-catalog-view-fields.util';
+import { computeStandardPriceCatalogEntryViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-price-catalog-entry-view-fields.util';
 import { type CreateStandardViewFieldArgs } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/create-standard-view-field-flat-metadata.util';
 
 type StandardViewFieldBuilder<P extends AllStandardObjectName> = (
@@ -61,6 +64,9 @@ const STANDARD_FLAT_VIEW_FIELD_METADATA_BUILDERS_BY_OBJECT_NAME = {
   workflowRun: computeStandardWorkflowRunViewFields,
   workflowVersion: computeStandardWorkflowVersionViewFields,
   workspaceMember: computeStandardWorkspaceMemberViewFields,
+  product: computeStandardProductViewFields,
+  priceCatalog: computeStandardPriceCatalogViewFields,
+  priceCatalogEntry: computeStandardPriceCatalogEntryViewFields,
 } as const satisfies {
   [P in AllStandardObjectName]?: StandardViewFieldBuilder<P>;
 };

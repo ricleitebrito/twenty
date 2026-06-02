@@ -25,6 +25,9 @@ import { buildWorkflowRunStandardFlatIndexMetadatas } from 'src/engine/workspace
 import { buildWorkflowStandardFlatIndexMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/index/compute-workflow-standard-flat-index-metadata.util';
 import { buildWorkflowVersionStandardFlatIndexMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/index/compute-workflow-version-standard-flat-index-metadata.util';
 import { buildWorkspaceMemberStandardFlatIndexMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/index/compute-workspace-member-standard-flat-index-metadata.util';
+import { buildProductStandardFlatIndexMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/index/compute-product-standard-flat-index-metadata.util';
+import { buildPriceCatalogStandardFlatIndexMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/index/compute-price-catalog-standard-flat-index-metadata.util';
+import { buildPriceCatalogEntryStandardFlatIndexMetadatas } from 'src/engine/workspace-manager/twenty-standard-application/utils/index/compute-price-catalog-entry-standard-flat-index-metadata.util';
 import { type CreateStandardIndexArgs } from 'src/engine/workspace-manager/twenty-standard-application/utils/index/create-standard-index-flat-metadata.util';
 
 type StandardIndexBuilder<P extends AllStandardObjectName> = (
@@ -59,6 +62,9 @@ const STANDARD_FLAT_INDEX_METADATA_BUILDERS_BY_OBJECT_NAME = {
   workflowRun: buildWorkflowRunStandardFlatIndexMetadatas,
   workflowVersion: buildWorkflowVersionStandardFlatIndexMetadatas,
   workspaceMember: buildWorkspaceMemberStandardFlatIndexMetadatas,
+  product: buildProductStandardFlatIndexMetadatas,
+  priceCatalog: buildPriceCatalogStandardFlatIndexMetadatas,
+  priceCatalogEntry: buildPriceCatalogEntryStandardFlatIndexMetadatas,
 } satisfies {
   [P in AllStandardObjectName]?: StandardIndexBuilder<P>;
 };

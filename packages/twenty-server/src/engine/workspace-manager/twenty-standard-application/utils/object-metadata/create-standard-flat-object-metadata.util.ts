@@ -711,6 +711,92 @@ export const STANDARD_FLAT_OBJECT_METADATA_BUILDERS_BY_OBJECT_NAME = {
       twentyStandardApplicationId,
       now,
     }),
+  product: ({
+    now,
+    workspaceId,
+    standardObjectMetadataRelatedEntityIds,
+    twentyStandardApplicationId,
+    dependencyFlatEntityMaps,
+  }: Omit<CreateStandardObjectArgs<'product'>, 'context' | 'objectName'>) =>
+    createStandardObjectFlatMetadata({
+      objectName: 'product',
+      dependencyFlatEntityMaps,
+      context: {
+        universalIdentifier: STANDARD_OBJECTS.product.universalIdentifier,
+        nameSingular: 'product',
+        namePlural: 'products',
+        labelSingular: i18nLabel(msg`Product`),
+        labelPlural: i18nLabel(msg`Products`),
+        description: i18nLabel(msg`A product or service`),
+        icon: 'IconBox',
+        isSearchable: true,
+        labelIdentifierFieldMetadataName: 'name',
+      },
+      workspaceId,
+      standardObjectMetadataRelatedEntityIds,
+      twentyStandardApplicationId,
+      now,
+    }),
+  priceCatalog: ({
+    now,
+    workspaceId,
+    standardObjectMetadataRelatedEntityIds,
+    twentyStandardApplicationId,
+    dependencyFlatEntityMaps,
+  }: Omit<
+    CreateStandardObjectArgs<'priceCatalog'>,
+    'context' | 'objectName'
+  >) =>
+    createStandardObjectFlatMetadata({
+      objectName: 'priceCatalog',
+      dependencyFlatEntityMaps,
+      context: {
+        universalIdentifier: STANDARD_OBJECTS.priceCatalog.universalIdentifier,
+        nameSingular: 'priceCatalog',
+        namePlural: 'priceCatalogs',
+        labelSingular: i18nLabel(msg`Price Catalog`),
+        labelPlural: i18nLabel(msg`Price Catalogs`),
+        description: i18nLabel(msg`A catalog of product prices`),
+        icon: 'IconTag',
+        isSearchable: true,
+        labelIdentifierFieldMetadataName: 'name',
+      },
+      workspaceId,
+      standardObjectMetadataRelatedEntityIds,
+      twentyStandardApplicationId,
+      now,
+    }),
+  priceCatalogEntry: ({
+    now,
+    workspaceId,
+    standardObjectMetadataRelatedEntityIds,
+    twentyStandardApplicationId,
+    dependencyFlatEntityMaps,
+  }: Omit<
+    CreateStandardObjectArgs<'priceCatalogEntry'>,
+    'context' | 'objectName'
+  >) =>
+    createStandardObjectFlatMetadata({
+      objectName: 'priceCatalogEntry',
+      dependencyFlatEntityMaps,
+      context: {
+        universalIdentifier:
+          STANDARD_OBJECTS.priceCatalogEntry.universalIdentifier,
+        nameSingular: 'priceCatalogEntry',
+        namePlural: 'priceCatalogEntries',
+        labelSingular: i18nLabel(msg`Price Catalog Entry`),
+        labelPlural: i18nLabel(msg`Price Catalog Entries`),
+        description: i18nLabel(
+          msg`A product priced inside a price catalog (junction between Product and Price Catalog)`,
+        ),
+        icon: 'IconCurrencyDollar',
+        labelIdentifierFieldMetadataName: 'id',
+      },
+      workspaceId,
+      standardObjectMetadataRelatedEntityIds,
+      twentyStandardApplicationId,
+      now,
+    }),
 } satisfies {
   [P in AllStandardObjectName]: (
     args: Omit<CreateStandardObjectArgs<P>, 'context' | 'objectName'>,

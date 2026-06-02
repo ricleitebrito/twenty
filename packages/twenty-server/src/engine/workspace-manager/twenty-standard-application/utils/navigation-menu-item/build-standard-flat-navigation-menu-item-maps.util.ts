@@ -19,6 +19,8 @@ const FLAT_NAVIGATION_MENU_ITEM_NAMES = [
   'allOpportunities',
   'allPeople',
   'allTasks',
+  'allProducts',
+  'allPriceCatalogs',
 ] as const;
 
 const WORKFLOWS_FOLDER_ITEM_NAMES = [

@@ -217,6 +217,11 @@ This handles everything: starts Postgres + Redis (auto-detects local services vs
 
 **Note:** CI workflows (GitHub Actions) manage services via Actions service containers and run setup steps individually — they don't use this script.
 
+## Standard Objects
+- Standard (built-in) objects are declared in `STANDARD_OBJECTS` at `packages/twenty-shared/src/metadata/constants/standard-object.constant.ts` (single source of truth for object/field/index/view `universalIdentifier`s) and built by the per-object builders under `packages/twenty-server/src/engine/workspace-manager/twenty-standard-application/`. Never mutate or reuse an existing `universalIdentifier`.
+- Existing workspaces pick up new standard objects without a DB reset via `TwentyStandardApplicationService.synchronizeTwentyStandardApplicationOrThrow` (diff-based incremental migration), triggered for existing tenants by an upgrade `@RegisteredWorkspaceCommand`.
+- Products, Price Catalogs and the n-n Price Catalog Entry are documented in `packages/twenty-server/docs/PRODUCTS_AND_PRICE_CATALOGS.md`.
+
 ## Important Files
 - `nx.json` - Nx workspace configuration with task definitions
 - `tsconfig.base.json` - Base TypeScript configuration

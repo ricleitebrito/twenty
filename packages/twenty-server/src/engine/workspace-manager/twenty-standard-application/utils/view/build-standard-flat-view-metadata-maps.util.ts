@@ -27,6 +27,9 @@ import { computeStandardWorkflowRunViews } from 'src/engine/workspace-manager/tw
 import { computeStandardWorkflowVersionViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-workflow-version-views.util';
 import { computeStandardWorkflowViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-workflow-views.util';
 import { computeStandardWorkspaceMemberViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-workspace-member-views.util';
+import { computeStandardProductViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-product-views.util';
+import { computeStandardPriceCatalogViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-price-catalog-views.util';
+import { computeStandardPriceCatalogEntryViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-price-catalog-entry-views.util';
 import { type CreateStandardViewArgs } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/create-standard-view-flat-metadata.util';
 
 type StandardViewBuilder<P extends AllStandardObjectName> = (
@@ -61,6 +64,9 @@ const STANDARD_FLAT_VIEW_METADATA_BUILDERS_BY_OBJECT_NAME = {
   workflowRun: computeStandardWorkflowRunViews,
   workflowVersion: computeStandardWorkflowVersionViews,
   workspaceMember: computeStandardWorkspaceMemberViews,
+  product: computeStandardProductViews,
+  priceCatalog: computeStandardPriceCatalogViews,
+  priceCatalogEntry: computeStandardPriceCatalogEntryViews,
 } as const satisfies {
   [P in AllStandardObjectName]?: StandardViewBuilder<P>;
 };
