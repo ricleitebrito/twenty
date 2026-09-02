@@ -256,6 +256,61 @@ describe('CostTemplateCalculationService', () => {
     });
   });
 
+  it('returns UNBOUND_VARIABLE when an omitted optional field is referenced directly, unguarded', () => {
+    const result = service.calculate({
+      fields: [
+        { variableName: 'seats', fieldType: 'NUMBER', isRequired: true },
+        {
+          variableName: 'discountAmount',
+          fieldType: 'NUMBER',
+          isRequired: false,
+        },
+      ],
+      steps: [
+        {
+          variableName: 'total',
+          formula: 'seats + discountAmount',
+          isOutput: true,
+        },
+      ],
+      fieldValues: { seats: 10 },
+    });
+
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.errors).toHaveLength(1);
+      expect(result.errors[0].type).toBe('UNBOUND_VARIABLE');
+      expect(result.errors[0].variableName).toBe('total');
+    }
+  });
+
+  it('succeeds when an omitted optional field is referenced only inside an IF untaken branch', () => {
+    const result = service.calculate({
+      fields: [
+        {
+          variableName: 'hasDiscount',
+          fieldType: 'BOOLEAN',
+          isRequired: true,
+        },
+        {
+          variableName: 'discountAmount',
+          fieldType: 'NUMBER',
+          isRequired: false,
+        },
+      ],
+      steps: [
+        {
+          variableName: 'total',
+          formula: 'IF(hasDiscount = 1, discountAmount, 0)',
+          isOutput: true,
+        },
+      ],
+      fieldValues: { hasDiscount: false },
+    });
+
+    expect(result).toEqual({ success: true, value: 0 });
+  });
+
   it('attributes an error to the intermediate step that actually failed, not the output step', () => {
     const result = service.calculate({
       fields: [
