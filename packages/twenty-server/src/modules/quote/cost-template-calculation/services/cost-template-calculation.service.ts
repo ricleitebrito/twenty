@@ -1,6 +1,15 @@
 import { Injectable } from '@nestjs/common';
 
-import { Calculator } from 'dentaku';
+import {
+  ArgumentCountError,
+  Calculator,
+  CycleError,
+  DentakuError,
+  MathDomainError,
+  TypeMismatchError,
+  UnboundVariableError,
+  ZeroDivisionError,
+} from 'dentaku';
 
 import {
   type CostTemplateCalculationError,
@@ -68,7 +77,19 @@ export class CostTemplateCalculationService {
       formulas[step.variableName] = step.formula;
     }
 
-    const solved = calculator.solve(formulas);
+    let solved: Record<string, unknown>;
+
+    try {
+      solved = calculator.solve(formulas);
+    } catch (error) {
+      return {
+        success: false,
+        errors: [
+          mapDentakuErrorToCalculationError(error, outputStep.variableName),
+        ],
+      };
+    }
+
     const value = solved[outputStep.variableName];
 
     if (typeof value !== 'number') {
@@ -87,3 +108,43 @@ export class CostTemplateCalculationService {
     return { success: true, value };
   }
 }
+
+const mapDentakuErrorToCalculationError = (
+  error: unknown,
+  fallbackVariableName: string,
+): CostTemplateCalculationError => {
+  if (!(error instanceof DentakuError)) {
+    // Not a DentakuError at all (e.g. a real bug) — not this function's
+    // job to swallow, per the spec's "never a raw 500" applying only to
+    // *formula* errors, not to genuine defects.
+    throw error;
+  }
+
+  // solve()'s bulk errors carry .key naming the specific formula that
+  // failed — an intermediate step, not necessarily the output step.
+  // Falls back to the output step's name for the rare case key is unset.
+  const variableName = error.key ?? fallbackVariableName;
+
+  if (error instanceof UnboundVariableError) {
+    return { type: 'UNBOUND_VARIABLE', message: error.message, variableName };
+  }
+  if (error instanceof CycleError) {
+    return { type: 'CYCLE', message: error.message, variableName };
+  }
+  if (error instanceof TypeMismatchError) {
+    return { type: 'TYPE_MISMATCH', message: error.message, variableName };
+  }
+  if (error instanceof ZeroDivisionError) {
+    return { type: 'ZERO_DIVISION', message: error.message, variableName };
+  }
+  if (error instanceof MathDomainError) {
+    return { type: 'MATH_DOMAIN', message: error.message, variableName };
+  }
+  if (error instanceof ArgumentCountError) {
+    return { type: 'ARGUMENT_COUNT', message: error.message, variableName };
+  }
+
+  // ParseError, or any DentakuError subclass added to the library after
+  // this mapping was written — still a formula problem, not a bug here.
+  return { type: 'PARSE_ERROR', message: error.message, variableName };
+};

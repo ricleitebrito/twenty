@@ -114,4 +114,148 @@ describe('CostTemplateCalculationService', () => {
       ],
     });
   });
+
+  it('maps an UNBOUND_VARIABLE error when a formula references an unknown variable', () => {
+    const result = service.calculate({
+      fields: [],
+      steps: [
+        {
+          variableName: 'total',
+          formula: 'undeclaredVariable + 1',
+          isOutput: true,
+        },
+      ],
+      fieldValues: {},
+    });
+
+    expect(result).toEqual({
+      success: false,
+      errors: [
+        {
+          type: 'UNBOUND_VARIABLE',
+          message: expect.stringContaining('undeclaredVariable'),
+          variableName: 'total',
+        },
+      ],
+    });
+  });
+
+  it('maps a PARSE_ERROR when a formula is syntactically invalid', () => {
+    const result = service.calculate({
+      fields: [],
+      steps: [{ variableName: 'total', formula: '1 + + 2', isOutput: true }],
+      fieldValues: {},
+    });
+
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.errors).toHaveLength(1);
+      expect(result.errors[0].type).toBe('PARSE_ERROR');
+      expect(result.errors[0].variableName).toBe('total');
+    }
+  });
+
+  it('maps a ZERO_DIVISION error', () => {
+    const result = service.calculate({
+      fields: [
+        { variableName: 'divisor', fieldType: 'NUMBER', isRequired: true },
+      ],
+      steps: [
+        { variableName: 'total', formula: '10 / divisor', isOutput: true },
+      ],
+      fieldValues: { divisor: 0 },
+    });
+
+    expect(result).toEqual({
+      success: false,
+      errors: [
+        {
+          type: 'ZERO_DIVISION',
+          message: expect.any(String),
+          variableName: 'total',
+        },
+      ],
+    });
+  });
+
+  it('maps a CYCLE error when steps reference each other circularly', () => {
+    const result = service.calculate({
+      fields: [],
+      steps: [
+        { variableName: 'a', formula: 'b + 1', isOutput: false },
+        { variableName: 'b', formula: 'a + 1', isOutput: true },
+      ],
+      fieldValues: {},
+    });
+
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.errors).toHaveLength(1);
+      expect(result.errors[0].type).toBe('CYCLE');
+    }
+  });
+
+  it('maps a MATH_DOMAIN error', () => {
+    const result = service.calculate({
+      fields: [],
+      steps: [{ variableName: 'total', formula: 'SQRT(-1)', isOutput: true }],
+      fieldValues: {},
+    });
+
+    expect(result).toEqual({
+      success: false,
+      errors: [
+        {
+          type: 'MATH_DOMAIN',
+          message: expect.any(String),
+          variableName: 'total',
+        },
+      ],
+    });
+  });
+
+  it('maps a TYPE_MISMATCH error', () => {
+    const result = service.calculate({
+      fields: [
+        { variableName: 'tier', fieldType: 'PICKLIST', isRequired: true },
+      ],
+      steps: [{ variableName: 'total', formula: 'tier + 1', isOutput: true }],
+      fieldValues: { tier: 'gold' },
+    });
+
+    expect(result).toEqual({
+      success: false,
+      errors: [
+        {
+          type: 'TYPE_MISMATCH',
+          message: expect.any(String),
+          variableName: 'total',
+        },
+      ],
+    });
+  });
+
+  it('attributes an error to the intermediate step that actually failed, not the output step', () => {
+    const result = service.calculate({
+      fields: [
+        { variableName: 'seats', fieldType: 'NUMBER', isRequired: true },
+      ],
+      steps: [
+        { variableName: 'subtotal', formula: '10 / seats', isOutput: false },
+        { variableName: 'total', formula: 'subtotal * 2', isOutput: true },
+      ],
+      fieldValues: { seats: 0 },
+    });
+
+    expect(result).toEqual({
+      success: false,
+      errors: [
+        {
+          type: 'ZERO_DIVISION',
+          message: expect.any(String),
+          variableName: 'subtotal',
+        },
+      ],
+    });
+  });
 });
