@@ -28,4 +28,22 @@ export const buildCostTemplateFieldStandardFlatIndexMetadatas = ({
     twentyStandardApplicationId,
     now,
   }),
+  // DB-level backstop for the hook-level uniqueness check in
+  // CostTemplateValidationService.validateUniqueVariableNames — the hooks
+  // read-then-write outside the write transaction, so two concurrent
+  // createOne calls can both pass validation and both insert.
+  variableNameUniqueIndex: createStandardIndexFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      indexName: 'variableNameUniqueIndex',
+      relatedFieldNames: ['costTemplate', 'variableName'],
+      isUnique: true,
+      indexWhereClause: '"deletedAt" IS NULL',
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
 });

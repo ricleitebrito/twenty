@@ -972,9 +972,6 @@ exports[`STANDARD_OBJECTS universal identifiers should never change without an e
           "fields": {
             "universalIdentifier": "92432d47-e816-59a2-9718-1a7a93ebcc82",
           },
-          "name": {
-            "universalIdentifier": "0a9b08ce-3fdd-596f-9450-549e3e353bc0",
-          },
           "products": {
             "universalIdentifier": "0e61aa73-29d7-5230-929e-53c169e5e969",
           },
@@ -1042,6 +1039,9 @@ exports[`STANDARD_OBJECTS universal identifiers should never change without an e
     "indexes": {
       "costTemplateIdIndex": {
         "universalIdentifier": "f5624466-eccd-489c-9734-36df3adddf2b",
+      },
+      "variableNameUniqueIndex": {
+        "universalIdentifier": "71248106-02a7-4390-9c8e-d768c1dda564",
       },
     },
     "universalIdentifier": "505f9acd-2de3-4b81-b23e-a8b5cfaeb8d3",
@@ -1156,6 +1156,12 @@ exports[`STANDARD_OBJECTS universal identifiers should never change without an e
     "indexes": {
       "costTemplateIdIndex": {
         "universalIdentifier": "b991d0e5-7fda-43c7-809f-b70a1ecd0929",
+      },
+      "singleOutputStepUniqueIndex": {
+        "universalIdentifier": "5d7f22fa-b785-459a-b3e3-339dddd0821f",
+      },
+      "variableNameUniqueIndex": {
+        "universalIdentifier": "1614d837-c2cc-4b36-af21-b9e0383ccae2",
       },
     },
     "universalIdentifier": "69c4f626-ec37-4dcf-84e1-59c173a75acf",

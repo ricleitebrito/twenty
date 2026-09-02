@@ -1291,6 +1291,9 @@ export const STANDARD_OBJECTS = {
       costTemplateIdIndex: {
         universalIdentifier: 'f5624466-eccd-489c-9734-36df3adddf2b',
       },
+      variableNameUniqueIndex: {
+        universalIdentifier: '71248106-02a7-4390-9c8e-d768c1dda564',
+      },
     },
     views: {
       allCostTemplateFields: buildStandardObjectIndexView({
@@ -1330,6 +1333,12 @@ export const STANDARD_OBJECTS = {
     indexes: {
       costTemplateIdIndex: {
         universalIdentifier: 'b991d0e5-7fda-43c7-809f-b70a1ecd0929',
+      },
+      variableNameUniqueIndex: {
+        universalIdentifier: '1614d837-c2cc-4b36-af21-b9e0383ccae2',
+      },
+      singleOutputStepUniqueIndex: {
+        universalIdentifier: '5d7f22fa-b785-459a-b3e3-339dddd0821f',
       },
     },
     views: {

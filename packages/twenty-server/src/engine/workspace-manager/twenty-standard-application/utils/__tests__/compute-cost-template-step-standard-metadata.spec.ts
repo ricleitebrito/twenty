@@ -63,6 +63,39 @@ describe('CostTemplateStep standard metadata build', () => {
     expect(costTemplateIdIndex).toBeDefined();
   });
 
+  // DB-level backstop for CostTemplateValidationService.validateUniqueVariableNames
+  // — the hook-level check alone is a read-then-write race, not a guarantee.
+  it('enforces variableName uniqueness per cost template with a soft-delete-aware unique index', () => {
+    const variableNameUniqueIndex =
+      allFlatEntityMaps.flatIndexMaps.byUniversalIdentifier[
+        STANDARD_OBJECTS.costTemplateStep.indexes.variableNameUniqueIndex
+          .universalIdentifier
+      ];
+
+    expect(variableNameUniqueIndex?.isUnique).toBe(true);
+    expect(variableNameUniqueIndex?.indexWhereClause).toBe(
+      '"deletedAt" IS NULL',
+    );
+  });
+
+  // DB-level backstop for CostTemplateValidationService.validateSingleOutputStep
+  // ("at most one output step per template").
+  it('enforces at most one output step per cost template with a partial unique index', () => {
+    const singleOutputStepUniqueIndex =
+      allFlatEntityMaps.flatIndexMaps.byUniversalIdentifier[
+        STANDARD_OBJECTS.costTemplateStep.indexes.singleOutputStepUniqueIndex
+          .universalIdentifier
+      ];
+
+    expect(singleOutputStepUniqueIndex?.isUnique).toBe(true);
+    expect(singleOutputStepUniqueIndex?.indexWhereClause).toBe(
+      '"isOutput" AND "deletedAt" IS NULL',
+    );
+    expect(singleOutputStepUniqueIndex?.flatIndexFieldMetadatas).toHaveLength(
+      1,
+    );
+  });
+
   it('gives costTemplate a reverse steps relation', () => {
     const stepsField =
       allFlatEntityMaps.flatFieldMetadataMaps.byUniversalIdentifier[

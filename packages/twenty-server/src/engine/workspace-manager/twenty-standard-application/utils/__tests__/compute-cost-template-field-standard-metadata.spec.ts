@@ -66,6 +66,35 @@ describe('CostTemplateField standard metadata build', () => {
     expect(costTemplateIdIndex).toBeDefined();
   });
 
+  // DB-level backstop for CostTemplateValidationService.validateUniqueVariableNames
+  // — the hook-level check alone is a read-then-write race, not a guarantee.
+  it('enforces variableName uniqueness per cost template with a soft-delete-aware unique index', () => {
+    const variableNameUniqueIndex =
+      allFlatEntityMaps.flatIndexMaps.byUniversalIdentifier[
+        STANDARD_OBJECTS.costTemplateField.indexes.variableNameUniqueIndex
+          .universalIdentifier
+      ];
+
+    expect(variableNameUniqueIndex?.isUnique).toBe(true);
+    expect(variableNameUniqueIndex?.indexWhereClause).toBe(
+      '"deletedAt" IS NULL',
+    );
+    expect(
+      variableNameUniqueIndex?.flatIndexFieldMetadatas.map(
+        (indexField) => indexField.fieldMetadataId,
+      ),
+    ).toEqual([
+      allFlatEntityMaps.flatFieldMetadataMaps.byUniversalIdentifier[
+        STANDARD_OBJECTS.costTemplateField.fields.costTemplate
+          .universalIdentifier
+      ]?.id,
+      allFlatEntityMaps.flatFieldMetadataMaps.byUniversalIdentifier[
+        STANDARD_OBJECTS.costTemplateField.fields.variableName
+          .universalIdentifier
+      ]?.id,
+    ]);
+  });
+
   it('gives costTemplate a reverse fields relation', () => {
     const fieldsField =
       allFlatEntityMaps.flatFieldMetadataMaps.byUniversalIdentifier[
