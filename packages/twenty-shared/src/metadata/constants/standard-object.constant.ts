@@ -1265,7 +1265,8 @@ export const STANDARD_OBJECTS = {
           STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.costTemplate,
         fields: STANDARD_OBJECT_FIELDS.costTemplate,
         viewFieldNames: [
-          'name',
+          // name is excluded here, matching company/opportunity/person/note/task —
+          // it already renders in the record page header.
           'description',
           'fields',
           'steps',

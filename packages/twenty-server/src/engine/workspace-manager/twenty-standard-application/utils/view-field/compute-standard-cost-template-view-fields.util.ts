@@ -61,6 +61,45 @@ export const computeStandardCostTemplateViewFields = (
           viewFieldGroupName: 'general',
         },
       }),
+    costTemplateRecordPageFieldsFields: createStandardViewFieldFlatMetadata({
+      ...args,
+      objectName: 'costTemplate',
+      context: {
+        viewName: 'costTemplateRecordPageFields',
+        viewFieldName: 'fields',
+        fieldName: 'fields',
+        position: 1,
+        isVisible: false,
+        size: 150,
+        viewFieldGroupName: 'general',
+      },
+    }),
+    costTemplateRecordPageFieldsSteps: createStandardViewFieldFlatMetadata({
+      ...args,
+      objectName: 'costTemplate',
+      context: {
+        viewName: 'costTemplateRecordPageFields',
+        viewFieldName: 'steps',
+        fieldName: 'steps',
+        position: 2,
+        isVisible: false,
+        size: 150,
+        viewFieldGroupName: 'general',
+      },
+    }),
+    costTemplateRecordPageFieldsProducts: createStandardViewFieldFlatMetadata({
+      ...args,
+      objectName: 'costTemplate',
+      context: {
+        viewName: 'costTemplateRecordPageFields',
+        viewFieldName: 'products',
+        fieldName: 'products',
+        position: 3,
+        isVisible: false,
+        size: 150,
+        viewFieldGroupName: 'general',
+      },
+    }),
     // System group
     costTemplateRecordPageFieldsCreatedAt: createStandardViewFieldFlatMetadata({
       ...args,

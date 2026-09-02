@@ -87,4 +87,46 @@ describe('CostTemplate standard metadata build', () => {
           .universalIdentifier,
     });
   });
+
+  // Regression: fields/steps/products were declared in the record-page
+  // fields view's viewFieldNames but never actually instantiated, leaving
+  // no UI path to attach a CostTemplateField/CostTemplateStep to a template.
+  it('instantiates every declared costTemplateRecordPageFields view field, including the fields/steps/products relations', () => {
+    const declaredViewFieldNames = Object.keys(
+      STANDARD_OBJECTS.costTemplate.views.costTemplateRecordPageFields
+        .viewFields,
+    );
+
+    const builtFieldMetadataUniversalIdentifiers = Object.values(
+      allFlatEntityMaps.flatViewFieldMaps.byUniversalIdentifier,
+    )
+      .filter(isDefined)
+      .filter(
+        (viewField) =>
+          viewField.viewUniversalIdentifier ===
+          STANDARD_OBJECTS.costTemplate.views.costTemplateRecordPageFields
+            .universalIdentifier,
+      )
+      .map((viewField) => viewField.fieldMetadataUniversalIdentifier);
+
+    const declaredFieldMetadataUniversalIdentifiers =
+      declaredViewFieldNames.map(
+        (viewFieldName) =>
+          STANDARD_OBJECTS.costTemplate.fields[
+            viewFieldName as keyof typeof STANDARD_OBJECTS.costTemplate.fields
+          ].universalIdentifier,
+      );
+
+    expect(builtFieldMetadataUniversalIdentifiers).toHaveLength(
+      declaredFieldMetadataUniversalIdentifiers.length,
+    );
+    expect(builtFieldMetadataUniversalIdentifiers).toEqual(
+      expect.arrayContaining(declaredFieldMetadataUniversalIdentifiers),
+    );
+
+    expect(declaredViewFieldNames).toEqual(
+      expect.arrayContaining(['fields', 'steps', 'products']),
+    );
+    expect(declaredViewFieldNames).not.toContain('name');
+  });
 });
