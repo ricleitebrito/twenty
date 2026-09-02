@@ -8,12 +8,12 @@ import { CostTemplateValidationService } from 'src/modules/quote/cost-template-v
 
 describe('CostTemplateValidationService', () => {
   let service: CostTemplateValidationService;
-  let costTemplateFieldRepository: { exists: jest.Mock };
-  let costTemplateStepRepository: { exists: jest.Mock };
+  let costTemplateFieldRepository: { exists: jest.Mock; findOne: jest.Mock };
+  let costTemplateStepRepository: { exists: jest.Mock; findOne: jest.Mock };
 
   beforeEach(async () => {
-    costTemplateFieldRepository = { exists: jest.fn() };
-    costTemplateStepRepository = { exists: jest.fn() };
+    costTemplateFieldRepository = { exists: jest.fn(), findOne: jest.fn() };
+    costTemplateStepRepository = { exists: jest.fn(), findOne: jest.fn() };
 
     const moduleRef = await Test.createTestingModule({
       providers: [
@@ -159,6 +159,58 @@ describe('CostTemplateValidationService', () => {
           id: Not('step-being-updated'),
         },
       });
+    });
+  });
+
+  describe('resolveExistingCostTemplateId', () => {
+    it('returns the costTemplateId from the existing costTemplateField record', async () => {
+      costTemplateFieldRepository.findOne.mockResolvedValue({
+        id: 'field-1',
+        costTemplateId: 'cost-template-1',
+      });
+
+      await expect(
+        service.resolveExistingCostTemplateId({
+          workspaceId: 'workspace-1',
+          objectMetadataName: 'costTemplateField',
+          recordId: 'field-1',
+        }),
+      ).resolves.toBe('cost-template-1');
+
+      expect(costTemplateFieldRepository.findOne).toHaveBeenCalledWith({
+        where: { id: 'field-1' },
+      });
+    });
+
+    it('returns the costTemplateId from the existing costTemplateStep record', async () => {
+      costTemplateStepRepository.findOne.mockResolvedValue({
+        id: 'step-1',
+        costTemplateId: 'cost-template-1',
+      });
+
+      await expect(
+        service.resolveExistingCostTemplateId({
+          workspaceId: 'workspace-1',
+          objectMetadataName: 'costTemplateStep',
+          recordId: 'step-1',
+        }),
+      ).resolves.toBe('cost-template-1');
+
+      expect(costTemplateStepRepository.findOne).toHaveBeenCalledWith({
+        where: { id: 'step-1' },
+      });
+    });
+
+    it('returns null when the existing record cannot be found', async () => {
+      costTemplateFieldRepository.findOne.mockResolvedValue(null);
+
+      await expect(
+        service.resolveExistingCostTemplateId({
+          workspaceId: 'workspace-1',
+          objectMetadataName: 'costTemplateField',
+          recordId: 'missing-field',
+        }),
+      ).resolves.toBeNull();
     });
   });
 });

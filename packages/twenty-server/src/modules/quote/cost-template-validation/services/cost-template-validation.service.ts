@@ -25,9 +25,41 @@ type ValidateSingleOutputStepArgs = {
   excludeRecordId: string | null;
 };
 
+type CostTemplateChildObjectName = 'costTemplateField' | 'costTemplateStep';
+
+type ResolveExistingCostTemplateIdArgs = {
+  workspaceId: string;
+  objectMetadataName: CostTemplateChildObjectName;
+  recordId: string;
+};
+
 @Injectable()
 export class CostTemplateValidationService {
   constructor(private readonly workspaceOrmManager: WorkspaceOrmManager) {}
+
+  // Update payloads only carry the fields the client actually changed
+  // (see workspace-query-hook.service.ts's executePreQueryHooks), so
+  // costTemplateId is frequently absent from an update that only touches
+  // variableName/isOutput. Look up the existing record to recover it.
+  async resolveExistingCostTemplateId({
+    workspaceId,
+    objectMetadataName,
+    recordId,
+  }: ResolveExistingCostTemplateIdArgs): Promise<string | null> {
+    const authContext = buildSystemAuthContext(workspaceId);
+
+    return this.workspaceOrmManager.executeInWorkspaceContext(async () => {
+      const repository = this.workspaceOrmManager.getRepository<
+        CostTemplateFieldWorkspaceEntity | CostTemplateStepWorkspaceEntity
+      >(objectMetadataName, { shouldBypassPermissionChecks: true });
+
+      const existingRecord = await repository.findOne({
+        where: { id: recordId },
+      });
+
+      return existingRecord?.costTemplateId ?? null;
+    }, authContext);
+  }
 
   async validateUniqueVariableNames({
     workspaceId,

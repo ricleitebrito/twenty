@@ -19,10 +19,29 @@ export class CostTemplateStepUpdateOnePreQueryHook implements WorkspacePreQueryH
     _objectName: string,
     payload: UpdateOneResolverArgs<CostTemplateStepWorkspaceEntity>,
   ): Promise<UpdateOneResolverArgs<CostTemplateStepWorkspaceEntity>> {
-    const { costTemplateId, variableName, isOutput } = payload.data;
+    const { variableName, isOutput } = payload.data;
 
-    // variableName isn't changing in this update, nothing to re-validate
-    if (isDefined(costTemplateId) && isDefined(variableName)) {
+    // Neither variableName nor isOutput is changing, nothing to re-validate
+    if (!isDefined(variableName) && isOutput !== true) {
+      return payload;
+    }
+
+    // costTemplateId is frequently absent from a partial update that only
+    // changes variableName/isOutput (e.g. an inline edit) — fall back to
+    // the existing record's costTemplateId so the checks still run.
+    const costTemplateId = isDefined(payload.data.costTemplateId)
+      ? payload.data.costTemplateId
+      : await this.costTemplateValidationService.resolveExistingCostTemplateId({
+          workspaceId: authContext.workspace.id,
+          objectMetadataName: 'costTemplateStep',
+          recordId: payload.id,
+        });
+
+    if (!isDefined(costTemplateId)) {
+      return payload;
+    }
+
+    if (isDefined(variableName)) {
       await this.costTemplateValidationService.validateUniqueVariableNames({
         workspaceId: authContext.workspace.id,
         costTemplateId,
@@ -31,7 +50,7 @@ export class CostTemplateStepUpdateOnePreQueryHook implements WorkspacePreQueryH
       });
     }
 
-    if (isDefined(costTemplateId) && isOutput === true) {
+    if (isOutput === true) {
       await this.costTemplateValidationService.validateSingleOutputStep({
         workspaceId: authContext.workspace.id,
         costTemplateId,

@@ -19,10 +19,25 @@ export class CostTemplateFieldUpdateOnePreQueryHook implements WorkspacePreQuery
     _objectName: string,
     payload: UpdateOneResolverArgs<CostTemplateFieldWorkspaceEntity>,
   ): Promise<UpdateOneResolverArgs<CostTemplateFieldWorkspaceEntity>> {
-    const { costTemplateId, variableName } = payload.data;
+    const { variableName } = payload.data;
 
     // variableName isn't changing in this update, nothing to re-validate
-    if (isDefined(costTemplateId) && isDefined(variableName)) {
+    if (!isDefined(variableName)) {
+      return payload;
+    }
+
+    // costTemplateId is frequently absent from a partial update that only
+    // changes variableName (e.g. an inline rename) — fall back to the
+    // existing record's costTemplateId so the check still runs.
+    const costTemplateId = isDefined(payload.data.costTemplateId)
+      ? payload.data.costTemplateId
+      : await this.costTemplateValidationService.resolveExistingCostTemplateId({
+          workspaceId: authContext.workspace.id,
+          objectMetadataName: 'costTemplateField',
+          recordId: payload.id,
+        });
+
+    if (isDefined(costTemplateId)) {
       await this.costTemplateValidationService.validateUniqueVariableNames({
         workspaceId: authContext.workspace.id,
         costTemplateId,
