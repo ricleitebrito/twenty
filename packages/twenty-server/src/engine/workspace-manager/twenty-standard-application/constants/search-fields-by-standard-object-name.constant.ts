@@ -14,6 +14,7 @@ export const SEARCH_FIELDS_BY_STANDARD_OBJECT_NAME = {
   callRecording: [{ name: 'title', type: FieldMetadataType.TEXT }],
   costTemplate: [{ name: 'name', type: FieldMetadataType.TEXT }],
   costTemplateField: [],
+  costTemplateStep: [],
   company: [
     { name: 'name', type: FieldMetadataType.TEXT },
     { name: 'domainName', type: FieldMetadataType.LINKS },

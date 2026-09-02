@@ -10,6 +10,7 @@ import { computeStandardCalendarEventParticipantViewFieldGroups } from 'src/engi
 import { computeStandardCallRecordingViewFieldGroups } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field-group/compute-standard-call-recording-view-field-groups.util';
 import { computeStandardCostTemplateFieldViewFieldGroups } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field-group/compute-standard-cost-template-field-view-field-groups.util';
 import { computeStandardCostTemplateViewFieldGroups } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field-group/compute-standard-cost-template-view-field-groups.util';
+import { computeStandardCostTemplateStepViewFieldGroups } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field-group/compute-standard-cost-template-step-view-field-groups.util';
 import { computeStandardCompanyViewFieldGroups } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field-group/compute-standard-company-view-field-groups.util';
 import { computeStandardMessageCampaignViewFieldGroups } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field-group/compute-standard-message-campaign-view-field-groups.util';
 import { computeStandardMessageChannelMessageAssociationViewFieldGroups } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field-group/compute-standard-message-channel-message-association-view-field-groups.util';
@@ -38,6 +39,7 @@ const STANDARD_FLAT_VIEW_FIELD_GROUP_METADATA_BUILDERS_BY_OBJECT_NAME = {
   callRecording: computeStandardCallRecordingViewFieldGroups,
   costTemplate: computeStandardCostTemplateViewFieldGroups,
   costTemplateField: computeStandardCostTemplateFieldViewFieldGroups,
+  costTemplateStep: computeStandardCostTemplateStepViewFieldGroups,
   company: computeStandardCompanyViewFieldGroups,
   messageCampaign: computeStandardMessageCampaignViewFieldGroups,
   messageChannelMessageAssociation:

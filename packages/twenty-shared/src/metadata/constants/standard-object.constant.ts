@@ -1268,6 +1268,7 @@ export const STANDARD_OBJECTS = {
           'name',
           'description',
           'fields',
+          'steps',
           'createdAt',
           'createdBy',
           'updatedAt',
@@ -1319,6 +1320,45 @@ export const STANDARD_OBJECTS = {
             system: 'System',
           },
         }),
+    },
+  },
+  costTemplateStep: {
+    universalIdentifier: STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.costTemplateStep,
+    fields: STANDARD_OBJECT_FIELDS.costTemplateStep,
+    indexes: {
+      costTemplateIdIndex: {
+        universalIdentifier: 'b991d0e5-7fda-43c7-809f-b70a1ecd0929',
+      },
+    },
+    views: {
+      allCostTemplateSteps: buildStandardObjectIndexView({
+        objectUniversalIdentifier:
+          STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.costTemplateStep,
+        fields: STANDARD_OBJECT_FIELDS.costTemplateStep,
+        viewFieldNames: ['name', 'variableName', 'formula', 'isOutput'],
+      }),
+      costTemplateStepRecordPageFields: buildStandardObjectRecordPageFieldsView(
+        {
+          objectUniversalIdentifier:
+            STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.costTemplateStep,
+          fields: STANDARD_OBJECT_FIELDS.costTemplateStep,
+          viewFieldNames: [
+            'costTemplate',
+            'name',
+            'variableName',
+            'formula',
+            'isOutput',
+            'createdAt',
+            'createdBy',
+            'updatedAt',
+            'updatedBy',
+          ],
+          viewFieldGroupNames: {
+            general: 'General',
+            system: 'System',
+          },
+        },
+      ),
     },
   },
 } as const satisfies Record<

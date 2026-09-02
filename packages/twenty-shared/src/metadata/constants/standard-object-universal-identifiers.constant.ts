@@ -36,6 +36,7 @@ export const STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS = {
   messageThread: '20202020-849a-4c3e-84f5-a25a7d802271',
   costTemplate: '4b97224d-b4eb-4edf-9254-dc8530c453eb',
   costTemplateField: '505f9acd-2de3-4b81-b23e-a8b5cfaeb8d3',
+  costTemplateStep: '69c4f626-ec37-4dcf-84e1-59c173a75acf',
 } as const;
 
 export type StandardObjectWithUniversalIdentifierName =

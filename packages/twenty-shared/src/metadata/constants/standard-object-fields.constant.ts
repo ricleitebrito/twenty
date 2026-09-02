@@ -1107,6 +1107,9 @@ export const STANDARD_OBJECT_FIELDS = {
     fields: {
       universalIdentifier: '902e17c9-facb-4454-a4e2-33a019affe6e',
     },
+    steps: {
+      universalIdentifier: 'd94074c9-4d5c-4350-9107-976575c5114b',
+    },
   },
   costTemplateField: {
     ...buildStandardObjectSystemFields(
@@ -1130,6 +1133,22 @@ export const STANDARD_OBJECT_FIELDS = {
     },
     isRequired: {
       universalIdentifier: 'a7430f0a-7b02-4f86-9e3f-c2df7862adbc',
+    },
+  },
+  costTemplateStep: {
+    ...buildStandardObjectSystemFields(
+      STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.costTemplateStep,
+    ),
+    costTemplate: {
+      universalIdentifier: 'a0bd1be9-2e8f-4a6b-bd22-e562a503b458',
+    },
+    name: { universalIdentifier: 'e912594a-a8a5-4829-a130-b1a903050dc3' },
+    variableName: {
+      universalIdentifier: '4845d073-67a4-4c03-92a6-635e3179ec28',
+    },
+    formula: { universalIdentifier: 'f9fccb36-35f0-4b99-8e2b-7b368b5211cc' },
+    isOutput: {
+      universalIdentifier: '9866f38a-fa49-45f1-9866-b95cfef9f60f',
     },
   },
 } satisfies Record<string, Record<string, { universalIdentifier: string }>>;

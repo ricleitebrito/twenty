@@ -563,4 +563,16 @@ export const STANDARD_PAGE_LAYOUT_UNIVERSAL_IDENTIFIERS = {
       },
     },
   }),
+  costTemplateStepRecordPage: buildStandardObjectRecordPageLayout({
+    objectUniversalIdentifier:
+      STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.costTemplateStep,
+    tabs: {
+      home: {
+        title: 'Home',
+        widgets: {
+          fields: 'Fields',
+        },
+      },
+    },
+  }),
 } as const;

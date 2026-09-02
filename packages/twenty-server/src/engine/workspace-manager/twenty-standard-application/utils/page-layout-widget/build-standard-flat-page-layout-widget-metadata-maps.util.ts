@@ -85,6 +85,7 @@ const RECORD_PAGE_FIELDS_VIEW_NAME_BY_OBJECT: Partial<
   callRecording: 'callRecordingRecordPageFields',
   costTemplate: 'costTemplateRecordPageFields',
   costTemplateField: 'costTemplateFieldRecordPageFields',
+  costTemplateStep: 'costTemplateStepRecordPageFields',
   company: 'companyRecordPageFields',
   messageCampaign: 'messageCampaignRecordPageFields',
   messageChannelMessageAssociation:

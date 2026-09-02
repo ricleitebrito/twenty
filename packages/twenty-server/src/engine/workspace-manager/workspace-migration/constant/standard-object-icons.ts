@@ -11,6 +11,7 @@ export const STANDARD_OBJECT_ICONS = {
   callRecording: 'IconVideo',
   costTemplate: 'IconCalculator',
   costTemplateField: 'IconForms',
+  costTemplateStep: 'IconMathFunction',
   comment: 'IconMessageCircle',
   company: 'IconBuildingSkyscraper',
   dashboard: 'IconLayoutDashboard',
