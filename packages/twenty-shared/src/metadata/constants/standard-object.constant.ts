@@ -1337,9 +1337,6 @@ export const STANDARD_OBJECTS = {
       variableNameUniqueIndex: {
         universalIdentifier: '1614d837-c2cc-4b36-af21-b9e0383ccae2',
       },
-      singleOutputStepUniqueIndex: {
-        universalIdentifier: '5d7f22fa-b785-459a-b3e3-339dddd0821f',
-      },
     },
     views: {
       allCostTemplateSteps: buildStandardObjectIndexView({

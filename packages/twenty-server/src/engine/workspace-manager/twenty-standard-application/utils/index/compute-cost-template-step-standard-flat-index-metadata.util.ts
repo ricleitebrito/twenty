@@ -48,21 +48,12 @@ export const buildCostTemplateStepStandardFlatIndexMetadatas = ({
     twentyStandardApplicationId,
     now,
   }),
-  // DB-level backstop for the hook-level check in
-  // CostTemplateValidationService.validateSingleOutputStep ("at most one
-  // output step per template").
-  singleOutputStepUniqueIndex: createStandardIndexFlatMetadata({
-    objectName,
-    workspaceId,
-    context: {
-      indexName: 'singleOutputStepUniqueIndex',
-      relatedFieldNames: ['costTemplate'],
-      isUnique: true,
-      indexWhereClause: '"isOutput" AND "deletedAt" IS NULL',
-    },
-    standardObjectMetadataRelatedEntityIds,
-    dependencyFlatEntityMaps,
-    twentyStandardApplicationId,
-    now,
-  }),
+  // No DB-level unique index for "at most one output step per template":
+  // Twenty's upsert-matching (get-conflicting-fields.util.ts) derives
+  // upsert keys from every isUnique index while ignoring indexWhereClause,
+  // so a single-column unique index on costTemplate alone (needed to
+  // express this partial-uniqueness rule) would make costTemplateId a
+  // de-facto global upsert key and corrupt CSV import (upsert: true).
+  // Enforcement stays at the hook level only
+  // (CostTemplateValidationService.validateSingleOutputStep).
 });

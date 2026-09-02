@@ -78,24 +78,6 @@ describe('CostTemplateStep standard metadata build', () => {
     );
   });
 
-  // DB-level backstop for CostTemplateValidationService.validateSingleOutputStep
-  // ("at most one output step per template").
-  it('enforces at most one output step per cost template with a partial unique index', () => {
-    const singleOutputStepUniqueIndex =
-      allFlatEntityMaps.flatIndexMaps.byUniversalIdentifier[
-        STANDARD_OBJECTS.costTemplateStep.indexes.singleOutputStepUniqueIndex
-          .universalIdentifier
-      ];
-
-    expect(singleOutputStepUniqueIndex?.isUnique).toBe(true);
-    expect(singleOutputStepUniqueIndex?.indexWhereClause).toBe(
-      '"isOutput" AND "deletedAt" IS NULL',
-    );
-    expect(singleOutputStepUniqueIndex?.flatIndexFieldMetadatas).toHaveLength(
-      1,
-    );
-  });
-
   it('gives costTemplate a reverse steps relation', () => {
     const stepsField =
       allFlatEntityMaps.flatFieldMetadataMaps.byUniversalIdentifier[
