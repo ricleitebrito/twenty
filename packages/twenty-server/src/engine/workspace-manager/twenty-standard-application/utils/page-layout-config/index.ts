@@ -3,6 +3,7 @@ export { STANDARD_CALENDAR_CHANNEL_EVENT_ASSOCIATION_PAGE_LAYOUT_CONFIG } from '
 export { STANDARD_CALENDAR_EVENT_PAGE_LAYOUT_CONFIG } from './standard-calendar-event-page-layout.config';
 export { STANDARD_CALENDAR_EVENT_PARTICIPANT_PAGE_LAYOUT_CONFIG } from './standard-calendar-event-participant-page-layout.config';
 export { STANDARD_CALL_RECORDING_PAGE_LAYOUT_CONFIG } from './standard-call-recording-page-layout.config';
+export { STANDARD_COST_TEMPLATE_FIELD_PAGE_LAYOUT_CONFIG } from './standard-cost-template-field-page-layout.config';
 export { STANDARD_COST_TEMPLATE_PAGE_LAYOUT_CONFIG } from './standard-cost-template-page-layout.config';
 export { STANDARD_COMPANY_PAGE_LAYOUT_CONFIG } from './standard-company-page-layout.config';
 export { STANDARD_DASHBOARD_PAGE_LAYOUT_CONFIG } from './standard-dashboard-page-layout.config';

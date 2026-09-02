@@ -1267,6 +1267,7 @@ export const STANDARD_OBJECTS = {
         viewFieldNames: [
           'name',
           'description',
+          'fields',
           'createdAt',
           'createdBy',
           'updatedAt',
@@ -1277,6 +1278,47 @@ export const STANDARD_OBJECTS = {
           system: 'System',
         },
       }),
+    },
+  },
+  costTemplateField: {
+    universalIdentifier:
+      STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.costTemplateField,
+    fields: STANDARD_OBJECT_FIELDS.costTemplateField,
+    indexes: {
+      costTemplateIdIndex: {
+        universalIdentifier: 'f5624466-eccd-489c-9734-36df3adddf2b',
+      },
+    },
+    views: {
+      allCostTemplateFields: buildStandardObjectIndexView({
+        objectUniversalIdentifier:
+          STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.costTemplateField,
+        fields: STANDARD_OBJECT_FIELDS.costTemplateField,
+        viewFieldNames: ['name', 'variableName', 'fieldType', 'isRequired'],
+      }),
+      costTemplateFieldRecordPageFields:
+        buildStandardObjectRecordPageFieldsView({
+          objectUniversalIdentifier:
+            STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.costTemplateField,
+          fields: STANDARD_OBJECT_FIELDS.costTemplateField,
+          viewFieldNames: [
+            'costTemplate',
+            'name',
+            'variableName',
+            'fieldType',
+            'picklistOptions',
+            'defaultValue',
+            'isRequired',
+            'createdAt',
+            'createdBy',
+            'updatedAt',
+            'updatedBy',
+          ],
+          viewFieldGroupNames: {
+            general: 'General',
+            system: 'System',
+          },
+        }),
     },
   },
 } as const satisfies Record<

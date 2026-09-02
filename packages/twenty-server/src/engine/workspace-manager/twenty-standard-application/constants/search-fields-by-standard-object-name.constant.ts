@@ -13,6 +13,7 @@ export const SEARCH_FIELDS_BY_STANDARD_OBJECT_NAME = {
   calendarEventParticipant: [{ name: 'handle', type: FieldMetadataType.TEXT }],
   callRecording: [{ name: 'title', type: FieldMetadataType.TEXT }],
   costTemplate: [{ name: 'name', type: FieldMetadataType.TEXT }],
+  costTemplateField: [],
   company: [
     { name: 'name', type: FieldMetadataType.TEXT },
     { name: 'domainName', type: FieldMetadataType.LINKS },

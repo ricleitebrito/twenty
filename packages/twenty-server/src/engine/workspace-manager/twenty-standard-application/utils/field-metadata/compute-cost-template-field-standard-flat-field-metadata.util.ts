@@ -2,6 +2,7 @@ import { msg } from '@lingui/core/macro';
 import {
   DateDisplayFormat,
   FieldMetadataType,
+  RelationOnDeleteAction,
   RelationType,
 } from 'twenty-shared/types';
 
@@ -15,7 +16,7 @@ import {
 } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/create-standard-field-flat-metadata.util';
 import { createStandardRelationFieldFlatMetadata } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/create-standard-relation-field-flat-metadata.util';
 
-export const buildCostTemplateStandardFlatFieldMetadatas = ({
+export const buildCostTemplateFieldStandardFlatFieldMetadatas = ({
   now,
   objectName,
   workspaceId,
@@ -23,9 +24,12 @@ export const buildCostTemplateStandardFlatFieldMetadatas = ({
   dependencyFlatEntityMaps,
   twentyStandardApplicationId,
 }: Omit<
-  CreateStandardFieldArgs<'costTemplate', FieldMetadataType>,
+  CreateStandardFieldArgs<'costTemplateField', FieldMetadataType>,
   'context'
->): Record<AllStandardObjectFieldName<'costTemplate'>, FlatFieldMetadata> => ({
+>): Record<
+  AllStandardObjectFieldName<'costTemplateField'>,
+  FlatFieldMetadata
+> => ({
   id: createStandardFieldFlatMetadata({
     objectName,
     workspaceId,
@@ -224,9 +228,41 @@ export const buildCostTemplateStandardFlatFieldMetadatas = ({
           context: 'fieldMetadata.description',
         }),
       ),
-      icon: 'IconCalculator',
+      icon: 'IconForms',
       isSystem: true,
       isNullable: true,
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+  costTemplate: createStandardRelationFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      type: FieldMetadataType.RELATION,
+      morphId: null,
+      fieldName: 'costTemplate',
+      label: i18nLabel(
+        msg({ message: `Cost Template`, context: 'fieldMetadata.label' }),
+      ),
+      description: i18nLabel(
+        msg({
+          message: `The cost template this field belongs to`,
+          context: 'fieldMetadata.description',
+        }),
+      ),
+      icon: 'IconCalculator',
+      isNullable: false,
+      isUIEditable: false,
+      targetObjectName: 'costTemplate',
+      targetFieldName: 'fields',
+      settings: {
+        relationType: RelationType.MANY_TO_ONE,
+        onDelete: RelationOnDeleteAction.CASCADE,
+        joinColumnName: 'costTemplateId',
+      },
     },
     standardObjectMetadataRelatedEntityIds,
     dependencyFlatEntityMaps,
@@ -244,7 +280,7 @@ export const buildCostTemplateStandardFlatFieldMetadatas = ({
       ),
       description: i18nLabel(
         msg({
-          message: `The cost template name`,
+          message: `The field's display name`,
           context: 'fieldMetadata.description',
         }),
       ),
@@ -256,22 +292,116 @@ export const buildCostTemplateStandardFlatFieldMetadatas = ({
     twentyStandardApplicationId,
     now,
   }),
-  description: createStandardFieldFlatMetadata({
+  variableName: createStandardFieldFlatMetadata({
     objectName,
     workspaceId,
     context: {
-      fieldName: 'description',
+      fieldName: 'variableName',
       type: FieldMetadataType.TEXT,
       label: i18nLabel(
-        msg({ message: `Description`, context: 'fieldMetadata.label' }),
+        msg({ message: `Variable Name`, context: 'fieldMetadata.label' }),
       ),
       description: i18nLabel(
         msg({
-          message: `The cost template description`,
+          message: `The formula variable name used to reference this field's value in cost template steps. Must be unique within the cost template.`,
           context: 'fieldMetadata.description',
         }),
       ),
-      icon: 'IconFileDescription',
+      icon: 'IconVariable',
+      isNullable: false,
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+  fieldType: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'fieldType',
+      type: FieldMetadataType.SELECT,
+      label: i18nLabel(
+        msg({ message: `Field Type`, context: 'fieldMetadata.label' }),
+      ),
+      description: i18nLabel(
+        msg({
+          message: `The input type shown to the user filling in this field`,
+          context: 'fieldMetadata.description',
+        }),
+      ),
+      icon: 'IconList',
+      isNullable: false,
+      defaultValue: "'NUMBER'",
+      options: [
+        {
+          id: '413dcdce-99bb-4b21-bc39-9df3038cd837',
+          value: 'NUMBER',
+          label: i18nLabel(
+            msg({ message: `Number`, context: 'fieldMetadata.label' }),
+          ),
+          position: 0,
+          color: 'sky',
+        },
+        {
+          id: 'ec67285f-3e4f-4923-b818-9bc4bc3fbd4e',
+          value: 'CURRENCY',
+          label: i18nLabel(
+            msg({ message: `Currency`, context: 'fieldMetadata.label' }),
+          ),
+          position: 1,
+          color: 'green',
+        },
+        {
+          id: 'd967416f-279d-4574-aeb2-964219e42471',
+          value: 'PERCENTAGE',
+          label: i18nLabel(
+            msg({ message: `Percentage`, context: 'fieldMetadata.label' }),
+          ),
+          position: 2,
+          color: 'orange',
+        },
+        {
+          id: 'e3fe565e-4e78-4a9d-a074-69349169e7ae',
+          value: 'BOOLEAN',
+          label: i18nLabel(
+            msg({ message: `Boolean`, context: 'fieldMetadata.label' }),
+          ),
+          position: 3,
+          color: 'purple',
+        },
+        {
+          id: 'c6fd441d-383c-418b-9fd9-76dcad92bb43',
+          value: 'PICKLIST',
+          label: i18nLabel(
+            msg({ message: `Picklist`, context: 'fieldMetadata.label' }),
+          ),
+          position: 4,
+          color: 'pink',
+        },
+      ],
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+  picklistOptions: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'picklistOptions',
+      type: FieldMetadataType.RAW_JSON,
+      label: i18nLabel(
+        msg({ message: `Picklist Options`, context: 'fieldMetadata.label' }),
+      ),
+      description: i18nLabel(
+        msg({
+          message: `The list of { label, value } options, required when Field Type is Picklist`,
+          context: 'fieldMetadata.description',
+        }),
+      ),
+      icon: 'IconListDetails',
       isNullable: true,
     },
     standardObjectMetadataRelatedEntityIds,
@@ -279,29 +409,47 @@ export const buildCostTemplateStandardFlatFieldMetadatas = ({
     twentyStandardApplicationId,
     now,
   }),
-  fields: createStandardRelationFieldFlatMetadata({
+  defaultValue: createStandardFieldFlatMetadata({
     objectName,
     workspaceId,
     context: {
-      type: FieldMetadataType.RELATION,
-      morphId: null,
-      fieldName: 'fields',
-      isSystemSideEffect: true,
+      fieldName: 'defaultValue',
+      type: FieldMetadataType.TEXT,
       label: i18nLabel(
-        msg({ message: `Fields`, context: 'fieldMetadata.label' }),
+        msg({ message: `Default Value`, context: 'fieldMetadata.label' }),
       ),
       description: i18nLabel(
         msg({
-          message: `The input fields defined on this cost template`,
+          message: `The value pre-filled when a quote line is created`,
           context: 'fieldMetadata.description',
         }),
       ),
-      icon: 'IconForms',
+      icon: 'IconPencil',
       isNullable: true,
-      isUIEditable: false,
-      targetObjectName: 'costTemplateField',
-      targetFieldName: 'costTemplate',
-      settings: { relationType: RelationType.ONE_TO_MANY },
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+  isRequired: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'isRequired',
+      type: FieldMetadataType.BOOLEAN,
+      label: i18nLabel(
+        msg({ message: `Is Required`, context: 'fieldMetadata.label' }),
+      ),
+      description: i18nLabel(
+        msg({
+          message: `Whether a quote line must provide this field before its price can be calculated`,
+          context: 'fieldMetadata.description',
+        }),
+      ),
+      icon: 'IconAsterisk',
+      isNullable: false,
+      defaultValue: true,
     },
     standardObjectMetadataRelatedEntityIds,
     dependencyFlatEntityMaps,

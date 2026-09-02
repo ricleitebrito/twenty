@@ -9,6 +9,7 @@ import { computeStandardCalendarChannelEventAssociationViews } from 'src/engine/
 import { computeStandardCalendarEventParticipantViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-calendar-event-participant-views.util';
 import { computeStandardCalendarEventViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-calendar-event-views.util';
 import { computeStandardCallRecordingViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-call-recording-views.util';
+import { computeStandardCostTemplateFieldViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-cost-template-field-views.util';
 import { computeStandardCostTemplateViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-cost-template-views.util';
 import { computeStandardCompanyViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-company-views.util';
 import { computeStandardDashboardViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-dashboard-views.util';
@@ -46,6 +47,7 @@ const STANDARD_FLAT_VIEW_METADATA_BUILDERS_BY_OBJECT_NAME = {
   calendarEventParticipant: computeStandardCalendarEventParticipantViews,
   callRecording: computeStandardCallRecordingViews,
   costTemplate: computeStandardCostTemplateViews,
+  costTemplateField: computeStandardCostTemplateFieldViews,
   company: computeStandardCompanyViews,
   dashboard: computeStandardDashboardViews,
   message: computeStandardMessageViews,
