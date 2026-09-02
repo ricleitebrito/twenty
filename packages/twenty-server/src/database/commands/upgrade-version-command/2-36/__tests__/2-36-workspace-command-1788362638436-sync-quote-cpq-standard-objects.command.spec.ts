@@ -1,9 +1,11 @@
+import { TWENTY_STANDARD_APPLICATION_UNIVERSAL_IDENTIFIER } from 'twenty-shared/application';
 import { STANDARD_OBJECTS } from 'twenty-shared/metadata';
 
 import { type WorkspaceIteratorService } from 'src/database/commands/command-runners/workspace-iterator.service';
 import { SyncQuoteCpqStandardObjectsCommand } from 'src/database/commands/upgrade-version-command/2-36/2-36-workspace-command-1788362638436-sync-quote-cpq-standard-objects.command';
 import { type ApplicationService } from 'src/engine/core-modules/application/application.service';
 import { type WorkspaceCacheService } from 'src/engine/workspace-cache/services/workspace-cache.service';
+import { SEARCH_FIELDS_BY_STANDARD_OBJECT_NAME } from 'src/engine/workspace-manager/twenty-standard-application/constants/search-fields-by-standard-object-name.constant';
 import { computeTwentyStandardApplicationAllFlatEntityMaps } from 'src/engine/workspace-manager/twenty-standard-application/utils/twenty-standard-application-all-flat-entity-maps.constant';
 import { type WorkspaceMigrationValidateBuildAndRunService } from 'src/engine/workspace-manager/workspace-migration/services/workspace-migration-validate-build-and-run-service';
 
@@ -11,9 +13,15 @@ import { type WorkspaceMigrationValidateBuildAndRunService } from 'src/engine/wo
 // definitions, so a regression in field/view/index/page-layout counts for
 // the 4 Quote/CPQ objects would fail here too, not just in their own specs.
 const WORKSPACE_ID = '20202020-0000-0000-0000-000000000001';
+// Must be the real twenty-standard application universal identifier (not an
+// arbitrary UUID): computeTwentyStandardApplicationAllFlatEntityMaps derives
+// every standard entity's identifier from this fixed constant internally, and
+// getSearchFieldUniversalIdentifier uses it as a uuid v5 namespace, which
+// requires a well-formed UUID (an arbitrary placeholder like
+// '...-0000-0000000000bb' fails uuid v5's namespace validation).
 const STANDARD_APPLICATION = {
   id: '20202020-0000-0000-0000-0000000000aa',
-  universalIdentifier: '20202020-0000-0000-0000-0000000000bb',
+  universalIdentifier: TWENTY_STANDARD_APPLICATION_UNIVERSAL_IDENTIFIER,
 };
 
 const EMPTY_MAP = { byUniversalIdentifier: {} };
@@ -41,6 +49,7 @@ const EMPTY_WORKSPACE_CACHE = {
   flatPageLayoutMaps: EMPTY_MAP,
   flatPageLayoutTabMaps: EMPTY_MAP,
   flatPageLayoutWidgetMaps: EMPTY_MAP,
+  flatSearchFieldMetadataMaps: EMPTY_MAP,
 };
 
 const countUniversalIdentifiers = (
@@ -50,6 +59,19 @@ const countUniversalIdentifiers = (
     (total, entitiesByName) => total + Object.keys(entitiesByName).length,
     0,
   );
+
+const EXPECTED_SEARCH_FIELD_COUNT = (
+  [
+    'costTemplate',
+    'costTemplateField',
+    'costTemplateStep',
+    'product',
+  ] as const
+).reduce(
+  (total, objectName) =>
+    total + SEARCH_FIELDS_BY_STANDARD_OBJECT_NAME[objectName].length,
+  0,
+);
 
 describe('SyncQuoteCpqStandardObjectsCommand', () => {
   let command: SyncQuoteCpqStandardObjectsCommand;
@@ -96,7 +118,6 @@ describe('SyncQuoteCpqStandardObjectsCommand', () => {
 
     await runOnWorkspace();
 
-    expect(computeTwentyStandardApplicationAllFlatEntityMaps).toBeDefined();
     expect(
       validateBuildAndRunLegacyWorkspaceMigrationMock,
     ).toHaveBeenCalledTimes(1);
@@ -153,6 +174,26 @@ describe('SyncQuoteCpqStandardObjectsCommand', () => {
     ).toHaveLength(8);
 
     expect(
+      allFlatEntityOperationByMetadataName.viewField.flatEntityToCreate,
+    ).toHaveLength(
+      countUniversalIdentifiers(
+        STANDARD_OBJECTS.costTemplate.views.allCostTemplates.viewFields,
+        STANDARD_OBJECTS.costTemplate.views.costTemplateRecordPageFields
+          .viewFields,
+        STANDARD_OBJECTS.costTemplateField.views.allCostTemplateFields
+          .viewFields,
+        STANDARD_OBJECTS.costTemplateField.views
+          .costTemplateFieldRecordPageFields.viewFields,
+        STANDARD_OBJECTS.costTemplateStep.views.allCostTemplateSteps
+          .viewFields,
+        STANDARD_OBJECTS.costTemplateStep.views
+          .costTemplateStepRecordPageFields.viewFields,
+        STANDARD_OBJECTS.product.views.allProducts.viewFields,
+        STANDARD_OBJECTS.product.views.productRecordPageFields.viewFields,
+      ),
+    );
+
+    expect(
       allFlatEntityOperationByMetadataName.pageLayout.flatEntityToCreate,
     ).toHaveLength(4);
     expect(
@@ -161,6 +202,11 @@ describe('SyncQuoteCpqStandardObjectsCommand', () => {
     expect(
       allFlatEntityOperationByMetadataName.pageLayoutWidget.flatEntityToCreate,
     ).toHaveLength(4);
+
+    expect(
+      allFlatEntityOperationByMetadataName.searchFieldMetadata
+        .flatEntityToCreate,
+    ).toHaveLength(EXPECTED_SEARCH_FIELD_COUNT);
 
     expect(payload.isSystemBuild).toBe(true);
     expect(payload.applicationUniversalIdentifier).toBe(
@@ -195,6 +241,7 @@ describe('SyncQuoteCpqStandardObjectsCommand', () => {
       flatPageLayoutMaps: allFlatEntityMaps.flatPageLayoutMaps,
       flatPageLayoutTabMaps: allFlatEntityMaps.flatPageLayoutTabMaps,
       flatPageLayoutWidgetMaps: allFlatEntityMaps.flatPageLayoutWidgetMaps,
+      flatSearchFieldMetadataMaps: allFlatEntityMaps.flatSearchFieldMetadataMaps,
     });
 
     await runOnWorkspace();

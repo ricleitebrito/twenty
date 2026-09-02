@@ -1,5 +1,6 @@
 import { Command } from 'nest-commander';
 
+import { getSearchFieldUniversalIdentifier } from 'twenty-shared/application';
 import {
   STANDARD_OBJECTS,
   STANDARD_PAGE_LAYOUT_UNIVERSAL_IDENTIFIERS,
@@ -18,12 +19,21 @@ import { type FlatObjectMetadata } from 'src/engine/metadata-modules/flat-object
 import { type FlatPageLayoutTab } from 'src/engine/metadata-modules/flat-page-layout-tab/types/flat-page-layout-tab.type';
 import { type FlatPageLayoutWidget } from 'src/engine/metadata-modules/flat-page-layout-widget/types/flat-page-layout-widget.type';
 import { type FlatPageLayout } from 'src/engine/metadata-modules/flat-page-layout/types/flat-page-layout.type';
+import { type FlatSearchFieldMetadata } from 'src/engine/metadata-modules/flat-search-field-metadata/types/flat-search-field-metadata.type';
 import { type FlatViewFieldGroup } from 'src/engine/metadata-modules/flat-view-field-group/types/flat-view-field-group.type';
 import { type FlatViewField } from 'src/engine/metadata-modules/flat-view-field/types/flat-view-field.type';
 import { type FlatView } from 'src/engine/metadata-modules/flat-view/types/flat-view.type';
+import { SEARCH_FIELDS_BY_STANDARD_OBJECT_NAME } from 'src/engine/workspace-manager/twenty-standard-application/constants/search-fields-by-standard-object-name.constant';
 import { WorkspaceCacheService } from 'src/engine/workspace-cache/services/workspace-cache.service';
 import { computeTwentyStandardApplicationAllFlatEntityMaps } from 'src/engine/workspace-manager/twenty-standard-application/utils/twenty-standard-application-all-flat-entity-maps.constant';
 import { WorkspaceMigrationValidateBuildAndRunService } from 'src/engine/workspace-manager/workspace-migration/services/workspace-migration-validate-build-and-run-service';
+
+const QUOTE_CPQ_STANDARD_OBJECT_NAMES = [
+  'costTemplate',
+  'costTemplateField',
+  'costTemplateStep',
+  'product',
+] as const;
 
 const getUniversalIdentifiers = (
   entitiesByName: Record<string, { universalIdentifier: string }>,
@@ -149,29 +159,34 @@ const QUOTE_CPQ_PAGE_LAYOUT_WIDGET_UNIVERSAL_IDENTIFIERS = [
 ];
 
 // This command runs the legacy (skipSideEffectExpandEngine: true) path
-// deliberately, not the >=2.19 default. It creates 4 whole standard objects
-// with their own curated system fields, searchVector field/index, default
-// INDEX view and RECORD_PAGE stack -- every one of those categories is also
-// an engine-owned side effect of an objectMetadata create (see
-// ObjectSystemFieldsOnCreateSideEffectHandlerService,
-// ObjectSearchVectorOnCreateSideEffectHandlerService,
-// ObjectSystemRelationsOnCreateSideEffectHandlerService,
-// ObjectIndexViewOnCreateSideEffectHandlerService and
-// ObjectRecordPageOnCreateSideEffectHandlerService), and the standard
-// definitions derive those same universal identifiers deterministically
-// (getSystemViewUniversalIdentifier, getSystemRecordPageLayoutUniversalIdentifier,
-// etc), so running this matrix through expandWithSideEffects collides on every
-// one of them: the flat view validator rejects a caller-provided INDEX view
-// outright, and the reserved-identifier collision check hard-fails the rest,
-// since the engine's injected copies are isSystemSideEffect: true while ours
-// are not. This mirrors the documented pre-2.19 carve-out (see
-// packages/twenty-server/docs/UPGRADE_COMMANDS.md and
-// upgrade:2-10:sync-call-recording-standard-objects) and the more recent
+// deliberately, not the >=2.19 default, because this create-set already IS
+// the full desired state and must not flow through expandWithSideEffects --
+// see WorkspaceMigrationValidateBuildAndRunService.validateBuildAndRunLegacyWorkspaceMigration's
+// own JSDoc. Two concrete reasons, not a stylistic preference:
+// 1. Fresh-workspace provisioning never runs the side-effect engine at all:
+//    TwentyStandardApplicationService.synchronizeTwentyStandardApplicationOrThrow
+//    calls validateBuildAndRunWorkspaceMigrationFromTo, which has no
+//    expandWithSideEffects step (see
+//    workspace-migration-validate-build-and-run-service.ts). So a fresh
+//    workspace's costTemplate/costTemplateField/costTemplateStep/product
+//    state never contains any engine-owned companion (system relations to
+//    timelineActivity/attachment/noteTarget/taskTarget, the engine's own
+//    default INDEX view, etc) -- routing this backfill through the engine
+//    would give upgraded workspaces extra rows fresh ones never get.
+// 2. That same standard sync runs with inferDeletionFromMissingEntities:
+//    true (twenty-standard-application.service.ts). Extra engine-injected
+//    rows this command's create-set doesn't declare would not be part of
+//    the standard application's expected state on the NEXT sync, and would
+//    become deletion candidates -- silent, delayed data loss, worse than a
+//    loud failure at command-run time.
+// Several precedents in this same >=2.19 codebase area confirm legacy is
+// the right call for this "backfill already-curated standard state" shape,
+// not a pre-2.19 leftover: upgrade:2-10:sync-call-recording-standard-objects,
+// upgrade:2-25:add-message-campaign-name-field, and the more recent
 // upgrade:2-26:demote-and-backfill-application-index-view and
-// upgrade:2-31:backfill-record-page commands, which backfill a
-// twenty-standard object's curated view/page-layout stack through the same
-// legacy path for the identical reason: the create-set already represents
-// the full desired state and must not be re-expanded.
+// upgrade:2-31:backfill-record-page, which backfill a twenty-standard
+// object's curated view/page-layout stack through the same legacy path for
+// the identical reason.
 @RegisteredWorkspaceCommand('2.36.0', 1788362638436)
 @Command({
   name: 'upgrade:2-36:sync-quote-cpq-standard-objects',
@@ -204,6 +219,7 @@ export class SyncQuoteCpqStandardObjectsCommand extends ProvisionedWorkspaceComm
       flatPageLayoutMaps,
       flatPageLayoutTabMaps,
       flatPageLayoutWidgetMaps,
+      flatSearchFieldMetadataMaps,
     } = await this.workspaceCacheService.getOrRecompute(workspaceId, [
       'flatObjectMetadataMaps',
       'flatFieldMetadataMaps',
@@ -214,6 +230,7 @@ export class SyncQuoteCpqStandardObjectsCommand extends ProvisionedWorkspaceComm
       'flatPageLayoutMaps',
       'flatPageLayoutTabMaps',
       'flatPageLayoutWidgetMaps',
+      'flatSearchFieldMetadataMaps',
     ]);
 
     if (
@@ -242,6 +259,28 @@ export class SyncQuoteCpqStandardObjectsCommand extends ProvisionedWorkspaceComm
         now,
         workspaceId,
         twentyStandardApplicationId: twentyStandardFlatApplication.id,
+      });
+
+    // Derived from SEARCH_FIELDS_BY_STANDARD_OBJECT_NAME rather than
+    // hardcoded per object: costTemplateField/costTemplateStep currently
+    // declare no search fields, but this picks up any that are added later
+    // without needing an edit here.
+    const quoteCpqSearchFieldUniversalIdentifiers =
+      QUOTE_CPQ_STANDARD_OBJECT_NAMES.flatMap((objectName) => {
+        const objectFields = STANDARD_OBJECTS[objectName].fields as Record<
+          string,
+          { universalIdentifier: string }
+        >;
+
+        return SEARCH_FIELDS_BY_STANDARD_OBJECT_NAME[objectName].map(
+          ({ name }) =>
+            getSearchFieldUniversalIdentifier({
+              applicationUniversalIdentifier:
+                twentyStandardFlatApplication.universalIdentifier,
+              fieldMetadataUniversalIdentifier:
+                objectFields[name].universalIdentifier,
+            }),
+        );
       });
 
     const allFlatEntityOperationByMetadataName = {
@@ -341,6 +380,17 @@ export class SyncQuoteCpqStandardObjectsCommand extends ProvisionedWorkspaceComm
             existingFlatEntityMaps: flatPageLayoutWidgetMaps,
             universalIdentifiers:
               QUOTE_CPQ_PAGE_LAYOUT_WIDGET_UNIVERSAL_IDENTIFIERS,
+          }),
+        flatEntityToDelete: [],
+        flatEntityToUpdate: [],
+      },
+      searchFieldMetadata: {
+        flatEntityToCreate:
+          getStandardFlatEntitiesToCreateOrThrow<FlatSearchFieldMetadata>({
+            standardFlatEntityMaps:
+              standardAllFlatEntityMaps.flatSearchFieldMetadataMaps,
+            existingFlatEntityMaps: flatSearchFieldMetadataMaps,
+            universalIdentifiers: quoteCpqSearchFieldUniversalIdentifiers,
           }),
         flatEntityToDelete: [],
         flatEntityToUpdate: [],
