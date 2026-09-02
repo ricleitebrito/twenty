@@ -235,6 +235,27 @@ describe('CostTemplateCalculationService', () => {
     });
   });
 
+  it('returns a NON_NUMERIC_OUTPUT error when the output step evaluates to a boolean', () => {
+    const result = service.calculate({
+      fields: [
+        { variableName: 'seats', fieldType: 'NUMBER', isRequired: true },
+      ],
+      steps: [{ variableName: 'total', formula: 'seats > 5', isOutput: true }],
+      fieldValues: { seats: 10 },
+    });
+
+    expect(result).toEqual({
+      success: false,
+      errors: [
+        {
+          type: 'NON_NUMERIC_OUTPUT',
+          message: 'Output step "total" did not evaluate to a number',
+          variableName: 'total',
+        },
+      ],
+    });
+  });
+
   it('attributes an error to the intermediate step that actually failed, not the output step', () => {
     const result = service.calculate({
       fields: [
