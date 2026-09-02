@@ -9,7 +9,7 @@ describe('CostTemplateStepUpdateOnePreQueryHook', () => {
   let costTemplateValidationService: {
     validateUniqueVariableNames: jest.Mock;
     validateSingleOutputStep: jest.Mock;
-    resolveExistingCostTemplateId: jest.Mock;
+    resolveEffectiveStepState: jest.Mock;
   };
 
   const authContext = {
@@ -27,7 +27,7 @@ describe('CostTemplateStepUpdateOnePreQueryHook', () => {
     costTemplateValidationService = {
       validateUniqueVariableNames: jest.fn(),
       validateSingleOutputStep: jest.fn(),
-      resolveExistingCostTemplateId: jest.fn(),
+      resolveEffectiveStepState: jest.fn(),
     };
 
     hook = new CostTemplateStepUpdateOnePreQueryHook(
@@ -35,7 +35,15 @@ describe('CostTemplateStepUpdateOnePreQueryHook', () => {
     );
   });
 
-  it('does not validate or fetch the existing record when neither variableName nor isOutput is part of the update', async () => {
+  // Regression: an earlier version skipped both checks unless variableName
+  // or isOutput was part of the payload, missing a reparent-only update.
+  it('always resolves the effective state and validates uniqueness, even when the update touches an unrelated field', async () => {
+    costTemplateValidationService.resolveEffectiveStepState.mockResolvedValue({
+      costTemplateId: 'cost-template-1',
+      variableName: 'total',
+      isOutput: false,
+    });
+
     await hook.execute(
       authContext,
       'costTemplateStep',
@@ -43,32 +51,34 @@ describe('CostTemplateStepUpdateOnePreQueryHook', () => {
     );
 
     expect(
-      costTemplateValidationService.resolveExistingCostTemplateId,
-    ).not.toHaveBeenCalled();
+      costTemplateValidationService.resolveEffectiveStepState,
+    ).toHaveBeenCalledWith({
+      workspaceId: 'workspace-1',
+      recordId: 'step-1',
+      costTemplateId: undefined,
+      variableName: undefined,
+      isOutput: undefined,
+    });
     expect(
       costTemplateValidationService.validateUniqueVariableNames,
-    ).not.toHaveBeenCalled();
+    ).toHaveBeenCalledWith({
+      workspaceId: 'workspace-1',
+      costTemplateId: 'cost-template-1',
+      variableName: 'total',
+      excludeRecordId: 'step-1',
+    });
     expect(
       costTemplateValidationService.validateSingleOutputStep,
     ).not.toHaveBeenCalled();
   });
 
-  it('does not re-validate the output invariant when isOutput is being cleared (set to false)', async () => {
-    await hook.execute(
-      authContext,
-      'costTemplateStep',
-      buildPayload({ isOutput: false }),
-    );
+  it('validates using the effective costTemplateId/variableName/isOutput from the payload', async () => {
+    costTemplateValidationService.resolveEffectiveStepState.mockResolvedValue({
+      costTemplateId: 'cost-template-1',
+      variableName: 'total',
+      isOutput: true,
+    });
 
-    expect(
-      costTemplateValidationService.resolveExistingCostTemplateId,
-    ).not.toHaveBeenCalled();
-    expect(
-      costTemplateValidationService.validateSingleOutputStep,
-    ).not.toHaveBeenCalled();
-  });
-
-  it('validates using costTemplateId from the payload when it is present, without fetching the existing record', async () => {
     await hook.execute(
       authContext,
       'costTemplateStep',
@@ -80,9 +90,6 @@ describe('CostTemplateStepUpdateOnePreQueryHook', () => {
     );
 
     expect(
-      costTemplateValidationService.resolveExistingCostTemplateId,
-    ).not.toHaveBeenCalled();
-    expect(
       costTemplateValidationService.validateUniqueVariableNames,
     ).toHaveBeenCalledWith({
       workspaceId: 'workspace-1',
@@ -99,80 +106,51 @@ describe('CostTemplateStepUpdateOnePreQueryHook', () => {
     });
   });
 
-  // Regression: a partial update that only renames the variable (or only
-  // flips isOutput), the common inline-edit shape, omits costTemplateId
-  // entirely, so the hook must fetch it from the existing record instead
-  // of silently skipping both checks.
-  it('fetches the existing costTemplateId once when the update payload omits it and both fields are changing', async () => {
-    costTemplateValidationService.resolveExistingCostTemplateId.mockResolvedValue(
-      'cost-template-1',
-    );
-
-    await hook.execute(
-      authContext,
-      'costTemplateStep',
-      buildPayload({ variableName: 'total', isOutput: true }),
-    );
-
-    expect(
-      costTemplateValidationService.resolveExistingCostTemplateId,
-    ).toHaveBeenCalledTimes(1);
-    expect(
-      costTemplateValidationService.resolveExistingCostTemplateId,
-    ).toHaveBeenCalledWith({
-      workspaceId: 'workspace-1',
-      objectMetadataName: 'costTemplateStep',
-      recordId: 'step-1',
-    });
-    expect(
-      costTemplateValidationService.validateUniqueVariableNames,
-    ).toHaveBeenCalledWith({
-      workspaceId: 'workspace-1',
+  it('does not re-validate the output invariant when the effective isOutput is false', async () => {
+    costTemplateValidationService.resolveEffectiveStepState.mockResolvedValue({
       costTemplateId: 'cost-template-1',
       variableName: 'total',
-      excludeRecordId: 'step-1',
+      isOutput: false,
     });
-    expect(
-      costTemplateValidationService.validateSingleOutputStep,
-    ).toHaveBeenCalledWith({
-      workspaceId: 'workspace-1',
-      costTemplateId: 'cost-template-1',
-      excludeRecordId: 'step-1',
-    });
-  });
-
-  it('fetches the existing costTemplateId when only isOutput is set to true and costTemplateId is absent', async () => {
-    costTemplateValidationService.resolveExistingCostTemplateId.mockResolvedValue(
-      'cost-template-1',
-    );
 
     await hook.execute(
       authContext,
       'costTemplateStep',
-      buildPayload({ isOutput: true }),
+      buildPayload({ isOutput: false }),
     );
 
     expect(
-      costTemplateValidationService.resolveExistingCostTemplateId,
-    ).toHaveBeenCalledWith({
-      workspaceId: 'workspace-1',
-      objectMetadataName: 'costTemplateStep',
-      recordId: 'step-1',
-    });
-    expect(
-      costTemplateValidationService.validateUniqueVariableNames,
+      costTemplateValidationService.validateSingleOutputStep,
     ).not.toHaveBeenCalled();
+  });
+
+  // Regression: moving an existing isOutput: true step into a different
+  // template (reparent-only update, isOutput absent from this payload) must
+  // still be checked against the target template's existing output step.
+  it('validates the output invariant on a reparent-only update when the existing record is already isOutput: true', async () => {
+    costTemplateValidationService.resolveEffectiveStepState.mockResolvedValue({
+      costTemplateId: 'cost-template-2',
+      variableName: 'total',
+      isOutput: true,
+    });
+
+    await hook.execute(
+      authContext,
+      'costTemplateStep',
+      buildPayload({ costTemplateId: 'cost-template-2' }),
+    );
+
     expect(
       costTemplateValidationService.validateSingleOutputStep,
     ).toHaveBeenCalledWith({
       workspaceId: 'workspace-1',
-      costTemplateId: 'cost-template-1',
+      costTemplateId: 'cost-template-2',
       excludeRecordId: 'step-1',
     });
   });
 
   it('skips both validations when the existing record cannot be found', async () => {
-    costTemplateValidationService.resolveExistingCostTemplateId.mockResolvedValue(
+    costTemplateValidationService.resolveEffectiveStepState.mockResolvedValue(
       null,
     );
 

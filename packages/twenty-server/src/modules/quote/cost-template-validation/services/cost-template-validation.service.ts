@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { msg } from '@lingui/core/macro';
+import { isDefined } from 'twenty-shared/utils';
 import { Not } from 'typeorm';
 
 import {
@@ -25,12 +26,30 @@ type ValidateSingleOutputStepArgs = {
   excludeRecordId: string | null;
 };
 
-type CostTemplateChildObjectName = 'costTemplateField' | 'costTemplateStep';
-
-type ResolveExistingCostTemplateIdArgs = {
+type ResolveEffectiveFieldStateArgs = {
   workspaceId: string;
-  objectMetadataName: CostTemplateChildObjectName;
   recordId: string;
+  costTemplateId?: string | null;
+  variableName?: string | null;
+};
+
+type EffectiveFieldState = {
+  costTemplateId: string;
+  variableName: string;
+};
+
+type ResolveEffectiveStepStateArgs = {
+  workspaceId: string;
+  recordId: string;
+  costTemplateId?: string | null;
+  variableName?: string | null;
+  isOutput?: boolean | null;
+};
+
+type EffectiveStepState = {
+  costTemplateId: string;
+  variableName: string;
+  isOutput: boolean;
 };
 
 @Injectable()
@@ -38,27 +57,95 @@ export class CostTemplateValidationService {
   constructor(private readonly workspaceOrmManager: WorkspaceOrmManager) {}
 
   // Update payloads only carry the fields the client actually changed
-  // (see workspace-query-hook.service.ts's executePreQueryHooks), so
-  // costTemplateId is frequently absent from an update that only touches
-  // variableName/isOutput. Look up the existing record to recover it.
-  async resolveExistingCostTemplateId({
+  // (see workspace-query-hook.service.ts's executePreQueryHooks), so a
+  // reparent (costTemplateId present, variableName absent) or a rename
+  // (variableName present, costTemplateId absent) each leave half the
+  // state to infer. Always fetch the existing record and merge it with
+  // whatever the payload carries, so callers never have to branch on
+  // which field happens to be present in a partial payload.
+  async resolveEffectiveFieldState({
     workspaceId,
-    objectMetadataName,
     recordId,
-  }: ResolveExistingCostTemplateIdArgs): Promise<string | null> {
+    costTemplateId,
+    variableName,
+  }: ResolveEffectiveFieldStateArgs): Promise<EffectiveFieldState | null> {
     const authContext = buildSystemAuthContext(workspaceId);
 
-    return this.workspaceOrmManager.executeInWorkspaceContext(async () => {
-      const repository = this.workspaceOrmManager.getRepository<
-        CostTemplateFieldWorkspaceEntity | CostTemplateStepWorkspaceEntity
-      >(objectMetadataName, { shouldBypassPermissionChecks: true });
+    const existingRecord =
+      await this.workspaceOrmManager.executeInWorkspaceContext(async () => {
+        const repository =
+          this.workspaceOrmManager.getRepository<CostTemplateFieldWorkspaceEntity>(
+            'costTemplateField',
+            { shouldBypassPermissionChecks: true },
+          );
 
-      const existingRecord = await repository.findOne({
-        where: { id: recordId },
-      });
+        return repository.findOne({ where: { id: recordId } });
+      }, authContext);
 
-      return existingRecord?.costTemplateId ?? null;
-    }, authContext);
+    if (!isDefined(existingRecord)) {
+      return null;
+    }
+
+    const effectiveCostTemplateId =
+      costTemplateId ?? existingRecord.costTemplateId;
+    const effectiveVariableName = variableName ?? existingRecord.variableName;
+
+    if (
+      !isDefined(effectiveCostTemplateId) ||
+      !isDefined(effectiveVariableName)
+    ) {
+      return null;
+    }
+
+    return {
+      costTemplateId: effectiveCostTemplateId,
+      variableName: effectiveVariableName,
+    };
+  }
+
+  // Same rationale as resolveEffectiveFieldState, for CostTemplateStep,
+  // which also carries the isOutput invariant.
+  async resolveEffectiveStepState({
+    workspaceId,
+    recordId,
+    costTemplateId,
+    variableName,
+    isOutput,
+  }: ResolveEffectiveStepStateArgs): Promise<EffectiveStepState | null> {
+    const authContext = buildSystemAuthContext(workspaceId);
+
+    const existingRecord =
+      await this.workspaceOrmManager.executeInWorkspaceContext(async () => {
+        const repository =
+          this.workspaceOrmManager.getRepository<CostTemplateStepWorkspaceEntity>(
+            'costTemplateStep',
+            { shouldBypassPermissionChecks: true },
+          );
+
+        return repository.findOne({ where: { id: recordId } });
+      }, authContext);
+
+    if (!isDefined(existingRecord)) {
+      return null;
+    }
+
+    const effectiveCostTemplateId =
+      costTemplateId ?? existingRecord.costTemplateId;
+    const effectiveVariableName = variableName ?? existingRecord.variableName;
+    const effectiveIsOutput = isOutput ?? existingRecord.isOutput;
+
+    if (
+      !isDefined(effectiveCostTemplateId) ||
+      !isDefined(effectiveVariableName)
+    ) {
+      return null;
+    }
+
+    return {
+      costTemplateId: effectiveCostTemplateId,
+      variableName: effectiveVariableName,
+      isOutput: effectiveIsOutput,
+    };
   }
 
   async validateUniqueVariableNames({

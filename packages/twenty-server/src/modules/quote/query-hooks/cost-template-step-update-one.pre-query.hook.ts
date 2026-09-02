@@ -19,41 +19,36 @@ export class CostTemplateStepUpdateOnePreQueryHook implements WorkspacePreQueryH
     _objectName: string,
     payload: UpdateOneResolverArgs<CostTemplateStepWorkspaceEntity>,
   ): Promise<UpdateOneResolverArgs<CostTemplateStepWorkspaceEntity>> {
-    const { variableName, isOutput } = payload.data;
-
-    // Neither variableName nor isOutput is changing, nothing to re-validate
-    if (!isDefined(variableName) && isOutput !== true) {
-      return payload;
-    }
-
-    // costTemplateId is frequently absent from a partial update that only
-    // changes variableName/isOutput (e.g. an inline edit) — fall back to
-    // the existing record's costTemplateId so the checks still run.
-    const costTemplateId = isDefined(payload.data.costTemplateId)
-      ? payload.data.costTemplateId
-      : await this.costTemplateValidationService.resolveExistingCostTemplateId({
-          workspaceId: authContext.workspace.id,
-          objectMetadataName: 'costTemplateStep',
-          recordId: payload.id,
-        });
-
-    if (!isDefined(costTemplateId)) {
-      return payload;
-    }
-
-    if (isDefined(variableName)) {
-      await this.costTemplateValidationService.validateUniqueVariableNames({
+    // Always resolve the effective post-update state (payload value, falling
+    // back to the existing record) rather than branching on which of
+    // costTemplateId/variableName/isOutput happens to be present in this
+    // partial update — a reparent alone (costTemplateId present, isOutput
+    // absent) must still be checked against the target template's existing
+    // output step when the record being moved is already isOutput: true.
+    const effectiveState =
+      await this.costTemplateValidationService.resolveEffectiveStepState({
         workspaceId: authContext.workspace.id,
-        costTemplateId,
-        variableName,
-        excludeRecordId: payload.id,
+        recordId: payload.id,
+        costTemplateId: payload.data.costTemplateId,
+        variableName: payload.data.variableName,
+        isOutput: payload.data.isOutput,
       });
+
+    if (!isDefined(effectiveState)) {
+      return payload;
     }
 
-    if (isOutput === true) {
+    await this.costTemplateValidationService.validateUniqueVariableNames({
+      workspaceId: authContext.workspace.id,
+      costTemplateId: effectiveState.costTemplateId,
+      variableName: effectiveState.variableName,
+      excludeRecordId: payload.id,
+    });
+
+    if (effectiveState.isOutput === true) {
       await this.costTemplateValidationService.validateSingleOutputStep({
         workspaceId: authContext.workspace.id,
-        costTemplateId,
+        costTemplateId: effectiveState.costTemplateId,
         excludeRecordId: payload.id,
       });
     }

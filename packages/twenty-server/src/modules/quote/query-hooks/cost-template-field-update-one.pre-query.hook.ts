@@ -19,32 +19,30 @@ export class CostTemplateFieldUpdateOnePreQueryHook implements WorkspacePreQuery
     _objectName: string,
     payload: UpdateOneResolverArgs<CostTemplateFieldWorkspaceEntity>,
   ): Promise<UpdateOneResolverArgs<CostTemplateFieldWorkspaceEntity>> {
-    const { variableName } = payload.data;
+    // Always resolve the effective post-update state (payload value, falling
+    // back to the existing record) rather than branching on which of
+    // costTemplateId/variableName happens to be present in this partial
+    // update — a reparent alone (costTemplateId present, variableName
+    // absent) must be validated against the target template's existing
+    // variable names just as much as a rename alone.
+    const effectiveState =
+      await this.costTemplateValidationService.resolveEffectiveFieldState({
+        workspaceId: authContext.workspace.id,
+        recordId: payload.id,
+        costTemplateId: payload.data.costTemplateId,
+        variableName: payload.data.variableName,
+      });
 
-    // variableName isn't changing in this update, nothing to re-validate
-    if (!isDefined(variableName)) {
+    if (!isDefined(effectiveState)) {
       return payload;
     }
 
-    // costTemplateId is frequently absent from a partial update that only
-    // changes variableName (e.g. an inline rename) — fall back to the
-    // existing record's costTemplateId so the check still runs.
-    const costTemplateId = isDefined(payload.data.costTemplateId)
-      ? payload.data.costTemplateId
-      : await this.costTemplateValidationService.resolveExistingCostTemplateId({
-          workspaceId: authContext.workspace.id,
-          objectMetadataName: 'costTemplateField',
-          recordId: payload.id,
-        });
-
-    if (isDefined(costTemplateId)) {
-      await this.costTemplateValidationService.validateUniqueVariableNames({
-        workspaceId: authContext.workspace.id,
-        costTemplateId,
-        variableName,
-        excludeRecordId: payload.id,
-      });
-    }
+    await this.costTemplateValidationService.validateUniqueVariableNames({
+      workspaceId: authContext.workspace.id,
+      costTemplateId: effectiveState.costTemplateId,
+      variableName: effectiveState.variableName,
+      excludeRecordId: payload.id,
+    });
 
     return payload;
   }

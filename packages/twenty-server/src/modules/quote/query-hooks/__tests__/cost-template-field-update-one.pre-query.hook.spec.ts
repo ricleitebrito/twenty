@@ -8,7 +8,7 @@ describe('CostTemplateFieldUpdateOnePreQueryHook', () => {
   let hook: CostTemplateFieldUpdateOnePreQueryHook;
   let costTemplateValidationService: {
     validateUniqueVariableNames: jest.Mock;
-    resolveExistingCostTemplateId: jest.Mock;
+    resolveEffectiveFieldState: jest.Mock;
   };
 
   const authContext = {
@@ -25,7 +25,7 @@ describe('CostTemplateFieldUpdateOnePreQueryHook', () => {
   beforeEach(() => {
     costTemplateValidationService = {
       validateUniqueVariableNames: jest.fn(),
-      resolveExistingCostTemplateId: jest.fn(),
+      resolveEffectiveFieldState: jest.fn(),
     };
 
     hook = new CostTemplateFieldUpdateOnePreQueryHook(
@@ -33,7 +33,16 @@ describe('CostTemplateFieldUpdateOnePreQueryHook', () => {
     );
   });
 
-  it('does not validate or fetch the existing record when variableName is not part of the update', async () => {
+  // Regression: an earlier version only fetched the existing record and
+  // validated when variableName was part of the payload, which skipped
+  // validation entirely for a reparent (costTemplateId changes, variableName
+  // doesn't). The hook must always resolve effective state and validate.
+  it('always resolves the effective state and validates, even when the update touches an unrelated field', async () => {
+    costTemplateValidationService.resolveEffectiveFieldState.mockResolvedValue({
+      costTemplateId: 'cost-template-1',
+      variableName: 'quantity',
+    });
+
     await hook.execute(
       authContext,
       'costTemplateField',
@@ -41,14 +50,29 @@ describe('CostTemplateFieldUpdateOnePreQueryHook', () => {
     );
 
     expect(
-      costTemplateValidationService.resolveExistingCostTemplateId,
-    ).not.toHaveBeenCalled();
+      costTemplateValidationService.resolveEffectiveFieldState,
+    ).toHaveBeenCalledWith({
+      workspaceId: 'workspace-1',
+      recordId: 'field-1',
+      costTemplateId: undefined,
+      variableName: undefined,
+    });
     expect(
       costTemplateValidationService.validateUniqueVariableNames,
-    ).not.toHaveBeenCalled();
+    ).toHaveBeenCalledWith({
+      workspaceId: 'workspace-1',
+      costTemplateId: 'cost-template-1',
+      variableName: 'quantity',
+      excludeRecordId: 'field-1',
+    });
   });
 
-  it('validates using costTemplateId from the payload when it is present, without fetching the existing record', async () => {
+  it('validates using the effective costTemplateId/variableName from the payload', async () => {
+    costTemplateValidationService.resolveEffectiveFieldState.mockResolvedValue({
+      costTemplateId: 'cost-template-1',
+      variableName: 'quantity',
+    });
+
     await hook.execute(
       authContext,
       'costTemplateField',
@@ -59,8 +83,13 @@ describe('CostTemplateFieldUpdateOnePreQueryHook', () => {
     );
 
     expect(
-      costTemplateValidationService.resolveExistingCostTemplateId,
-    ).not.toHaveBeenCalled();
+      costTemplateValidationService.resolveEffectiveFieldState,
+    ).toHaveBeenCalledWith({
+      workspaceId: 'workspace-1',
+      recordId: 'field-1',
+      costTemplateId: 'cost-template-1',
+      variableName: 'quantity',
+    });
     expect(
       costTemplateValidationService.validateUniqueVariableNames,
     ).toHaveBeenCalledWith({
@@ -71,40 +100,33 @@ describe('CostTemplateFieldUpdateOnePreQueryHook', () => {
     });
   });
 
-  // Regression: a partial update that only renames the field (the common
-  // inline-edit shape) omits costTemplateId entirely, so the hook must
-  // fetch it from the existing record instead of silently skipping the
-  // uniqueness check.
-  it('fetches the existing costTemplateId when the update payload omits it', async () => {
-    costTemplateValidationService.resolveExistingCostTemplateId.mockResolvedValue(
-      'cost-template-1',
-    );
+  // Regression: reparenting into a template that already has a colliding
+  // variableName must be caught even though variableName itself isn't part
+  // of this update's payload.
+  it('validates a reparent-only update against the target template using the existing variableName', async () => {
+    costTemplateValidationService.resolveEffectiveFieldState.mockResolvedValue({
+      costTemplateId: 'cost-template-2',
+      variableName: 'quantity',
+    });
 
     await hook.execute(
       authContext,
       'costTemplateField',
-      buildPayload({ variableName: 'quantity' }),
+      buildPayload({ costTemplateId: 'cost-template-2' }),
     );
 
-    expect(
-      costTemplateValidationService.resolveExistingCostTemplateId,
-    ).toHaveBeenCalledWith({
-      workspaceId: 'workspace-1',
-      objectMetadataName: 'costTemplateField',
-      recordId: 'field-1',
-    });
     expect(
       costTemplateValidationService.validateUniqueVariableNames,
     ).toHaveBeenCalledWith({
       workspaceId: 'workspace-1',
-      costTemplateId: 'cost-template-1',
+      costTemplateId: 'cost-template-2',
       variableName: 'quantity',
       excludeRecordId: 'field-1',
     });
   });
 
   it('skips validation when the existing record cannot be found', async () => {
-    costTemplateValidationService.resolveExistingCostTemplateId.mockResolvedValue(
+    costTemplateValidationService.resolveEffectiveFieldState.mockResolvedValue(
       null,
     );
 

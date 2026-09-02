@@ -10,10 +10,16 @@ describe('CostTemplateValidationService', () => {
   let service: CostTemplateValidationService;
   let costTemplateFieldRepository: { exists: jest.Mock; findOne: jest.Mock };
   let costTemplateStepRepository: { exists: jest.Mock; findOne: jest.Mock };
+  let getRepositoryMock: jest.Mock;
 
   beforeEach(async () => {
     costTemplateFieldRepository = { exists: jest.fn(), findOne: jest.fn() };
     costTemplateStepRepository = { exists: jest.fn(), findOne: jest.fn() };
+    getRepositoryMock = jest.fn((objectMetadataName: string) =>
+      objectMetadataName === 'costTemplateField'
+        ? costTemplateFieldRepository
+        : costTemplateStepRepository,
+    );
 
     const moduleRef = await Test.createTestingModule({
       providers: [
@@ -21,11 +27,7 @@ describe('CostTemplateValidationService', () => {
         {
           provide: WorkspaceOrmManager,
           useValue: {
-            getRepository: jest.fn((objectMetadataName: string) =>
-              objectMetadataName === 'costTemplateField'
-                ? costTemplateFieldRepository
-                : costTemplateStepRepository,
-            ),
+            getRepository: getRepositoryMock,
             executeInWorkspaceContext: jest.fn((fn: () => unknown) => fn()),
           },
         },
@@ -33,6 +35,57 @@ describe('CostTemplateValidationService', () => {
     }).compile();
 
     service = moduleRef.get(CostTemplateValidationService);
+  });
+
+  // Regression: getRepository's shouldBypassPermissionChecks flag is what
+  // makes this a real uniqueness check rather than one scoped to the
+  // calling user's permissions — dropping it silently narrows every
+  // validation query and would let permission-restricted collisions slip
+  // through undetected.
+  it('always bypasses permission checks when reading for validation', async () => {
+    costTemplateFieldRepository.exists.mockResolvedValue(false);
+    costTemplateStepRepository.exists.mockResolvedValue(false);
+    costTemplateFieldRepository.findOne.mockResolvedValue({
+      id: 'field-1',
+      costTemplateId: 'cost-template-1',
+      variableName: 'quantity',
+    });
+    costTemplateStepRepository.findOne.mockResolvedValue({
+      id: 'step-1',
+      costTemplateId: 'cost-template-1',
+      variableName: 'total',
+      isOutput: false,
+    });
+
+    await service.validateUniqueVariableNames({
+      workspaceId: 'workspace-1',
+      costTemplateId: 'cost-template-1',
+      variableName: 'quantity',
+      excludeRecordId: null,
+    });
+    await service.validateSingleOutputStep({
+      workspaceId: 'workspace-1',
+      costTemplateId: 'cost-template-1',
+      excludeRecordId: null,
+    });
+    await service.resolveEffectiveFieldState({
+      workspaceId: 'workspace-1',
+      recordId: 'field-1',
+    });
+    await service.resolveEffectiveStepState({
+      workspaceId: 'workspace-1',
+      recordId: 'step-1',
+    });
+
+    expect(getRepositoryMock).toHaveBeenCalledWith('costTemplateField', {
+      shouldBypassPermissionChecks: true,
+    });
+    expect(getRepositoryMock).toHaveBeenCalledWith('costTemplateStep', {
+      shouldBypassPermissionChecks: true,
+    });
+    getRepositoryMock.mock.calls.forEach((call) => {
+      expect(call[1]).toEqual({ shouldBypassPermissionChecks: true });
+    });
   });
 
   describe('validateUniqueVariableNames', () => {
@@ -162,42 +215,47 @@ describe('CostTemplateValidationService', () => {
     });
   });
 
-  describe('resolveExistingCostTemplateId', () => {
-    it('returns the costTemplateId from the existing costTemplateField record', async () => {
+  describe('resolveEffectiveFieldState', () => {
+    it('falls back to the existing record for whichever of costTemplateId/variableName is absent from the call', async () => {
       costTemplateFieldRepository.findOne.mockResolvedValue({
         id: 'field-1',
         costTemplateId: 'cost-template-1',
+        variableName: 'quantity',
       });
 
       await expect(
-        service.resolveExistingCostTemplateId({
+        service.resolveEffectiveFieldState({
           workspaceId: 'workspace-1',
-          objectMetadataName: 'costTemplateField',
           recordId: 'field-1',
+          costTemplateId: 'cost-template-2',
         }),
-      ).resolves.toBe('cost-template-1');
+      ).resolves.toEqual({
+        costTemplateId: 'cost-template-2',
+        variableName: 'quantity',
+      });
 
       expect(costTemplateFieldRepository.findOne).toHaveBeenCalledWith({
         where: { id: 'field-1' },
       });
     });
 
-    it('returns the costTemplateId from the existing costTemplateStep record', async () => {
-      costTemplateStepRepository.findOne.mockResolvedValue({
-        id: 'step-1',
+    it('uses the payload values for both fields when both are given', async () => {
+      costTemplateFieldRepository.findOne.mockResolvedValue({
+        id: 'field-1',
         costTemplateId: 'cost-template-1',
+        variableName: 'quantity',
       });
 
       await expect(
-        service.resolveExistingCostTemplateId({
+        service.resolveEffectiveFieldState({
           workspaceId: 'workspace-1',
-          objectMetadataName: 'costTemplateStep',
-          recordId: 'step-1',
+          recordId: 'field-1',
+          costTemplateId: 'cost-template-2',
+          variableName: 'price',
         }),
-      ).resolves.toBe('cost-template-1');
-
-      expect(costTemplateStepRepository.findOne).toHaveBeenCalledWith({
-        where: { id: 'step-1' },
+      ).resolves.toEqual({
+        costTemplateId: 'cost-template-2',
+        variableName: 'price',
       });
     });
 
@@ -205,10 +263,70 @@ describe('CostTemplateValidationService', () => {
       costTemplateFieldRepository.findOne.mockResolvedValue(null);
 
       await expect(
-        service.resolveExistingCostTemplateId({
+        service.resolveEffectiveFieldState({
           workspaceId: 'workspace-1',
-          objectMetadataName: 'costTemplateField',
           recordId: 'missing-field',
+        }),
+      ).resolves.toBeNull();
+    });
+  });
+
+  describe('resolveEffectiveStepState', () => {
+    it('falls back to the existing record for whichever of costTemplateId/variableName/isOutput is absent from the call', async () => {
+      costTemplateStepRepository.findOne.mockResolvedValue({
+        id: 'step-1',
+        costTemplateId: 'cost-template-1',
+        variableName: 'total',
+        isOutput: true,
+      });
+
+      await expect(
+        service.resolveEffectiveStepState({
+          workspaceId: 'workspace-1',
+          recordId: 'step-1',
+          costTemplateId: 'cost-template-2',
+        }),
+      ).resolves.toEqual({
+        costTemplateId: 'cost-template-2',
+        variableName: 'total',
+        isOutput: true,
+      });
+
+      expect(costTemplateStepRepository.findOne).toHaveBeenCalledWith({
+        where: { id: 'step-1' },
+      });
+    });
+
+    it('uses the payload values for every field when all are given', async () => {
+      costTemplateStepRepository.findOne.mockResolvedValue({
+        id: 'step-1',
+        costTemplateId: 'cost-template-1',
+        variableName: 'total',
+        isOutput: false,
+      });
+
+      await expect(
+        service.resolveEffectiveStepState({
+          workspaceId: 'workspace-1',
+          recordId: 'step-1',
+          costTemplateId: 'cost-template-2',
+          variableName: 'grandTotal',
+          isOutput: true,
+        }),
+      ).resolves.toEqual({
+        costTemplateId: 'cost-template-2',
+        variableName: 'grandTotal',
+        isOutput: true,
+      });
+    });
+
+    it('returns null when the existing record cannot be found', async () => {
+      costTemplateStepRepository.findOne.mockResolvedValue(null);
+
+      await expect(
+        service.resolveEffectiveStepState({
+          workspaceId: 'workspace-1',
+          recordId: 'missing-step',
         }),
       ).resolves.toBeNull();
     });
