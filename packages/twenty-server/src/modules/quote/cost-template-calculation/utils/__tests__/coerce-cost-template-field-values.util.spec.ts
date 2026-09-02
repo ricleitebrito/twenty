@@ -149,6 +149,64 @@ describe('coerceCostTemplateFieldValues', () => {
     });
   });
 
+  it('reports an INVALID_FIELD_VALUE error for a NUMBER value that coerces to Infinity', () => {
+    const result = coerceCostTemplateFieldValues({
+      fields: [
+        { variableName: 'seats', fieldType: 'NUMBER', isRequired: true },
+      ],
+      fieldValues: { seats: '1e999' },
+    });
+
+    expect(result).toEqual({
+      success: false,
+      errors: [
+        {
+          type: 'INVALID_FIELD_VALUE',
+          message: 'Field "seats" expected a numeric value, received "1e999"',
+          variableName: 'seats',
+        },
+      ],
+    });
+  });
+
+  it('reports an INVALID_FIELD_VALUE error for a NUMBER value that is neither a string nor a number', () => {
+    const arrayResult = coerceCostTemplateFieldValues({
+      fields: [
+        { variableName: 'seats', fieldType: 'NUMBER', isRequired: true },
+      ],
+      fieldValues: { seats: [] },
+    });
+
+    expect(arrayResult).toEqual({
+      success: false,
+      errors: [
+        {
+          type: 'INVALID_FIELD_VALUE',
+          message: 'Field "seats" expected a numeric value, received ""',
+          variableName: 'seats',
+        },
+      ],
+    });
+
+    const booleanResult = coerceCostTemplateFieldValues({
+      fields: [
+        { variableName: 'seats', fieldType: 'NUMBER', isRequired: true },
+      ],
+      fieldValues: { seats: true },
+    });
+
+    expect(booleanResult).toEqual({
+      success: false,
+      errors: [
+        {
+          type: 'INVALID_FIELD_VALUE',
+          message: 'Field "seats" expected a numeric value, received "true"',
+          variableName: 'seats',
+        },
+      ],
+    });
+  });
+
   it('collects multiple field errors across different fields', () => {
     const result = coerceCostTemplateFieldValues({
       fields: [

@@ -33,6 +33,13 @@ export const coerceCostTemplateFieldValues = ({
           variableName: field.variableName,
         });
       }
+      // An omitted optional field is simply never added to coercedValues,
+      // so it's never store()d on the Calculator. Any step formula that
+      // references it directly and unconditionally will fail the whole
+      // calculation with UNBOUND_VARIABLE — only a reference guarded behind
+      // a lazily-evaluated branch (e.g. IF's untaken branch) is currently
+      // safe. This is intentional-for-now, not a defined product contract;
+      // revisit when a consuming UI (Phase 6's editor) needs one.
       continue;
     }
 
@@ -40,9 +47,21 @@ export const coerceCostTemplateFieldValues = ({
       case 'NUMBER':
       case 'CURRENCY':
       case 'PERCENTAGE': {
+        if (typeof rawValue !== 'string' && typeof rawValue !== 'number') {
+          errors.push({
+            type: 'INVALID_FIELD_VALUE',
+            message: `Field "${field.variableName}" expected a numeric value, received "${String(rawValue)}"`,
+            variableName: field.variableName,
+          });
+          continue;
+        }
+
         const numericValue = Number(rawValue);
 
-        if (Number.isNaN(numericValue)) {
+        // !Number.isFinite also rejects +/-Infinity (e.g. from '1e999'),
+        // not just NaN — an unbounded numeric string must not reach
+        // dentaku's Calculator.store(), which throws for non-finite values.
+        if (!Number.isFinite(numericValue)) {
           errors.push({
             type: 'INVALID_FIELD_VALUE',
             message: `Field "${field.variableName}" expected a numeric value, received "${String(rawValue)}"`,

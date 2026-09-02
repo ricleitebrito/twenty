@@ -64,8 +64,6 @@ export class CostTemplateCalculationService {
     // never share it.
     const calculator = new Calculator();
 
-    calculator.store(coercionResult.coercedValues);
-
     // solve(), not storeFormula+evaluate: every step is solved as one
     // batch, in dependency order, regardless of declaration order — and
     // (unlike storeFormula+evaluate) it's the only dentaku entry point
@@ -80,6 +78,11 @@ export class CostTemplateCalculationService {
     let solved: Record<string, unknown>;
 
     try {
+      // store() inside the try, not before it: it can also throw (e.g.
+      // TypeMismatchError for a non-finite number), and any store()-time
+      // throw must be mapped through mapDentakuErrorToCalculationError
+      // like a solve()-time one, not escape as a raw exception.
+      calculator.store(coercionResult.coercedValues);
       solved = calculator.solve(formulas);
     } catch (error) {
       return {
