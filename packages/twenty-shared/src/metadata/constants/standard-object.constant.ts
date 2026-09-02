@@ -1269,6 +1269,7 @@ export const STANDARD_OBJECTS = {
           'description',
           'fields',
           'steps',
+          'products',
           'createdAt',
           'createdBy',
           'updatedAt',
@@ -1359,6 +1360,44 @@ export const STANDARD_OBJECTS = {
           },
         },
       ),
+    },
+  },
+  product: {
+    universalIdentifier: STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.product,
+    fields: STANDARD_OBJECT_FIELDS.product,
+    indexes: {
+      costTemplateIdIndex: {
+        universalIdentifier: 'c73156e2-c65e-46df-8848-99151a2ae07e',
+      },
+    },
+    views: {
+      allProducts: buildStandardObjectIndexView({
+        objectUniversalIdentifier:
+          STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.product,
+        fields: STANDARD_OBJECT_FIELDS.product,
+        viewFieldNames: ['name', 'sku', 'basePrice', 'isActive'],
+      }),
+      productRecordPageFields: buildStandardObjectRecordPageFieldsView({
+        objectUniversalIdentifier:
+          STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.product,
+        fields: STANDARD_OBJECT_FIELDS.product,
+        viewFieldNames: [
+          'name',
+          'sku',
+          'description',
+          'basePrice',
+          'isActive',
+          'costTemplate',
+          'createdAt',
+          'createdBy',
+          'updatedAt',
+          'updatedBy',
+        ],
+        viewFieldGroupNames: {
+          general: 'General',
+          system: 'System',
+        },
+      }),
     },
   },
 } as const satisfies Record<

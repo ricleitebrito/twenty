@@ -1110,6 +1110,9 @@ export const STANDARD_OBJECT_FIELDS = {
     steps: {
       universalIdentifier: 'd94074c9-4d5c-4350-9107-976575c5114b',
     },
+    products: {
+      universalIdentifier: '927d5b5a-9399-4460-a210-f586689bd70d',
+    },
   },
   costTemplateField: {
     ...buildStandardObjectSystemFields(
@@ -1149,6 +1152,25 @@ export const STANDARD_OBJECT_FIELDS = {
     formula: { universalIdentifier: 'f9fccb36-35f0-4b99-8e2b-7b368b5211cc' },
     isOutput: {
       universalIdentifier: '9866f38a-fa49-45f1-9866-b95cfef9f60f',
+    },
+  },
+  product: {
+    ...buildStandardObjectSystemFields(
+      STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.product,
+    ),
+    name: { universalIdentifier: '8b8b51ba-4383-4f80-87ae-62453471886e' },
+    sku: { universalIdentifier: 'b2c51aee-9efa-44f4-aead-ed3798c4474b' },
+    description: {
+      universalIdentifier: '23b6cee9-fd65-434d-9db0-e3b4fc6cc54f',
+    },
+    basePrice: {
+      universalIdentifier: '0ecd51c8-907a-44bf-bd20-e83d3668f4b8',
+    },
+    isActive: {
+      universalIdentifier: '01ff2b15-0eb1-408b-9584-d1e5126cd8cd',
+    },
+    costTemplate: {
+      universalIdentifier: '795d115f-824e-4f30-af84-9dd41021a7cc',
     },
   },
 } satisfies Record<string, Record<string, { universalIdentifier: string }>>;

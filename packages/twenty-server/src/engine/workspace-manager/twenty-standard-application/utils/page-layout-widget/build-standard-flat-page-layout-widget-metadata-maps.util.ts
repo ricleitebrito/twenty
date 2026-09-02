@@ -96,6 +96,7 @@ const RECORD_PAGE_FIELDS_VIEW_NAME_BY_OBJECT: Partial<
   note: 'noteRecordPageFields',
   opportunity: 'opportunityRecordPageFields',
   person: 'personRecordPageFields',
+  product: 'productRecordPageFields',
   task: 'taskRecordPageFields',
   workflowAutomatedTrigger: 'workflowAutomatedTriggerRecordPageFields',
   workflowRun: 'workflowRunRecordPageFields',

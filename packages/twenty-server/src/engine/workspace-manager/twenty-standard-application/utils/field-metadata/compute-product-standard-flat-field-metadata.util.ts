@@ -2,6 +2,7 @@ import { msg } from '@lingui/core/macro';
 import {
   DateDisplayFormat,
   FieldMetadataType,
+  RelationOnDeleteAction,
   RelationType,
 } from 'twenty-shared/types';
 
@@ -15,7 +16,7 @@ import {
 } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/create-standard-field-flat-metadata.util';
 import { createStandardRelationFieldFlatMetadata } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/create-standard-relation-field-flat-metadata.util';
 
-export const buildCostTemplateStandardFlatFieldMetadatas = ({
+export const buildProductStandardFlatFieldMetadatas = ({
   now,
   objectName,
   workspaceId,
@@ -23,9 +24,9 @@ export const buildCostTemplateStandardFlatFieldMetadatas = ({
   dependencyFlatEntityMaps,
   twentyStandardApplicationId,
 }: Omit<
-  CreateStandardFieldArgs<'costTemplate', FieldMetadataType>,
+  CreateStandardFieldArgs<'product', FieldMetadataType>,
   'context'
->): Record<AllStandardObjectFieldName<'costTemplate'>, FlatFieldMetadata> => ({
+>): Record<AllStandardObjectFieldName<'product'>, FlatFieldMetadata> => ({
   id: createStandardFieldFlatMetadata({
     objectName,
     workspaceId,
@@ -135,7 +136,7 @@ export const buildCostTemplateStandardFlatFieldMetadatas = ({
       ),
       description: i18nLabel(
         msg({
-          message: `Cost template record position`,
+          message: `Product record position`,
           context: 'fieldMetadata.description',
         }),
       ),
@@ -224,7 +225,7 @@ export const buildCostTemplateStandardFlatFieldMetadatas = ({
           context: 'fieldMetadata.description',
         }),
       ),
-      icon: 'IconCalculator',
+      icon: 'IconPackage',
       isSystem: true,
       isNullable: true,
     },
@@ -244,11 +245,32 @@ export const buildCostTemplateStandardFlatFieldMetadatas = ({
       ),
       description: i18nLabel(
         msg({
-          message: `The cost template name`,
+          message: `The product name`,
           context: 'fieldMetadata.description',
         }),
       ),
       icon: 'IconTag',
+      isNullable: true,
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+  sku: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'sku',
+      type: FieldMetadataType.TEXT,
+      label: i18nLabel(msg({ message: `SKU`, context: 'fieldMetadata.label' })),
+      description: i18nLabel(
+        msg({
+          message: `The product's stock keeping unit`,
+          context: 'fieldMetadata.description',
+        }),
+      ),
+      icon: 'IconBarcode',
       isNullable: true,
     },
     standardObjectMetadataRelatedEntityIds,
@@ -267,7 +289,7 @@ export const buildCostTemplateStandardFlatFieldMetadatas = ({
       ),
       description: i18nLabel(
         msg({
-          message: `The cost template description`,
+          message: `The product description`,
           context: 'fieldMetadata.description',
         }),
       ),
@@ -279,87 +301,78 @@ export const buildCostTemplateStandardFlatFieldMetadatas = ({
     twentyStandardApplicationId,
     now,
   }),
-  fields: createStandardRelationFieldFlatMetadata({
+  basePrice: createStandardFieldFlatMetadata({
     objectName,
     workspaceId,
     context: {
-      type: FieldMetadataType.RELATION,
-      morphId: null,
-      fieldName: 'fields',
-      isSystemSideEffect: true,
+      fieldName: 'basePrice',
+      type: FieldMetadataType.CURRENCY,
       label: i18nLabel(
-        msg({ message: `Fields`, context: 'fieldMetadata.label' }),
+        msg({ message: `Base Price`, context: 'fieldMetadata.label' }),
       ),
       description: i18nLabel(
         msg({
-          message: `The input fields defined on this cost template`,
+          message: `The product's list price`,
           context: 'fieldMetadata.description',
         }),
       ),
-      icon: 'IconForms',
+      icon: 'IconCurrencyDollar',
       isNullable: true,
-      isUIEditable: false,
-      targetObjectName: 'costTemplateField',
-      targetFieldName: 'costTemplate',
-      settings: { relationType: RelationType.ONE_TO_MANY },
     },
     standardObjectMetadataRelatedEntityIds,
     dependencyFlatEntityMaps,
     twentyStandardApplicationId,
     now,
   }),
-  steps: createStandardRelationFieldFlatMetadata({
+  isActive: createStandardFieldFlatMetadata({
     objectName,
     workspaceId,
     context: {
-      type: FieldMetadataType.RELATION,
-      morphId: null,
-      fieldName: 'steps',
-      isSystemSideEffect: true,
+      fieldName: 'isActive',
+      type: FieldMetadataType.BOOLEAN,
       label: i18nLabel(
-        msg({ message: `Steps`, context: 'fieldMetadata.label' }),
+        msg({ message: `Is Active`, context: 'fieldMetadata.label' }),
       ),
       description: i18nLabel(
         msg({
-          message: `The calculation steps defined on this cost template`,
+          message: `Whether this product can be added to new quote lines`,
           context: 'fieldMetadata.description',
         }),
       ),
-      icon: 'IconMathFunction',
-      isNullable: true,
-      isUIEditable: false,
-      targetObjectName: 'costTemplateStep',
-      targetFieldName: 'costTemplate',
-      settings: { relationType: RelationType.ONE_TO_MANY },
+      icon: 'IconCircleCheck',
+      isNullable: false,
+      defaultValue: true,
     },
     standardObjectMetadataRelatedEntityIds,
     dependencyFlatEntityMaps,
     twentyStandardApplicationId,
     now,
   }),
-  products: createStandardRelationFieldFlatMetadata({
+  costTemplate: createStandardRelationFieldFlatMetadata({
     objectName,
     workspaceId,
     context: {
       type: FieldMetadataType.RELATION,
       morphId: null,
-      fieldName: 'products',
-      isSystemSideEffect: true,
+      fieldName: 'costTemplate',
       label: i18nLabel(
-        msg({ message: `Products`, context: 'fieldMetadata.label' }),
+        msg({ message: `Cost Template`, context: 'fieldMetadata.label' }),
       ),
       description: i18nLabel(
         msg({
-          message: `The products priced with this cost template`,
+          message: `The cost template used to price quote lines for this product. Leave empty to price this product manually.`,
           context: 'fieldMetadata.description',
         }),
       ),
-      icon: 'IconPackage',
+      icon: 'IconCalculator',
       isNullable: true,
-      isUIEditable: false,
-      targetObjectName: 'product',
-      targetFieldName: 'costTemplate',
-      settings: { relationType: RelationType.ONE_TO_MANY },
+      targetObjectName: 'costTemplate',
+      targetFieldName: 'products',
+      settings: {
+        relationType: RelationType.MANY_TO_ONE,
+        onDelete: RelationOnDeleteAction.SET_NULL,
+        joinColumnName: 'costTemplateId',
+      },
     },
     standardObjectMetadataRelatedEntityIds,
     dependencyFlatEntityMaps,
