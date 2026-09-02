@@ -1096,4 +1096,13 @@ export const STANDARD_OBJECT_FIELDS = {
       universalIdentifier: '20202020-7f40-4e7f-b126-11c0eda6b141',
     },
   },
+  costTemplate: {
+    ...buildStandardObjectSystemFields(
+      STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.costTemplate,
+    ),
+    name: { universalIdentifier: '19a623a2-3bc7-4764-a047-ec7bb7bcc35c' },
+    description: {
+      universalIdentifier: '9839aa49-6688-47be-820b-2fa6d7c1aaf6',
+    },
+  },
 } satisfies Record<string, Record<string, { universalIdentifier: string }>>;

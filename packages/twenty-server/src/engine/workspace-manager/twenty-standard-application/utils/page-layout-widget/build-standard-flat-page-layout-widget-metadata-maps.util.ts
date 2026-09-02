@@ -83,6 +83,7 @@ const RECORD_PAGE_FIELDS_VIEW_NAME_BY_OBJECT: Partial<
   calendarEvent: 'calendarEventRecordPageFields',
   calendarEventParticipant: 'calendarEventParticipantRecordPageFields',
   callRecording: 'callRecordingRecordPageFields',
+  costTemplate: 'costTemplateRecordPageFields',
   company: 'companyRecordPageFields',
   messageCampaign: 'messageCampaignRecordPageFields',
   messageChannelMessageAssociation:

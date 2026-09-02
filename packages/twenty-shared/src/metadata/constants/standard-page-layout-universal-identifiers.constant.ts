@@ -539,4 +539,15 @@ export const STANDARD_PAGE_LAYOUT_UNIVERSAL_IDENTIFIERS = {
       },
     },
   }),
+  costTemplateRecordPage: buildStandardObjectRecordPageLayout({
+    objectUniversalIdentifier: STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.costTemplate,
+    tabs: {
+      home: {
+        title: 'Home',
+        widgets: {
+          fields: 'Fields',
+        },
+      },
+    },
+  }),
 } as const;

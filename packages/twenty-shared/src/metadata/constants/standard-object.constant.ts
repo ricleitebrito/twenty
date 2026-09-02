@@ -1249,6 +1249,36 @@ export const STANDARD_OBJECTS = {
       }),
     },
   },
+  costTemplate: {
+    universalIdentifier: STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.costTemplate,
+    fields: STANDARD_OBJECT_FIELDS.costTemplate,
+    indexes: {},
+    views: {
+      allCostTemplates: buildStandardObjectIndexView({
+        objectUniversalIdentifier:
+          STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.costTemplate,
+        fields: STANDARD_OBJECT_FIELDS.costTemplate,
+        viewFieldNames: ['name', 'description', 'createdAt'],
+      }),
+      costTemplateRecordPageFields: buildStandardObjectRecordPageFieldsView({
+        objectUniversalIdentifier:
+          STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.costTemplate,
+        fields: STANDARD_OBJECT_FIELDS.costTemplate,
+        viewFieldNames: [
+          'name',
+          'description',
+          'createdAt',
+          'createdBy',
+          'updatedAt',
+          'updatedBy',
+        ],
+        viewFieldGroupNames: {
+          general: 'General',
+          system: 'System',
+        },
+      }),
+    },
+  },
 } as const satisfies Record<
   string,
   {
