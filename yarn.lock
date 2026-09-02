@@ -28446,17 +28446,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"decimal.js@npm:10.6.0, decimal.js@npm:^10.6.0":
+  version: 10.6.0
+  resolution: "decimal.js@npm:10.6.0"
+  checksum: 10c0/07d69fbcc54167a340d2d97de95f546f9ff1f69d2b45a02fd7a5292412df3cd9eb7e23065e532a318f5474a2e1bccf8392fdf0443ef467f97f3bf8cb0477e5aa
+  languageName: node
+  linkType: hard
+
 "decimal.js@npm:^10.4.3, decimal.js@npm:^10.5.0":
   version: 10.5.0
   resolution: "decimal.js@npm:10.5.0"
   checksum: 10c0/785c35279df32762143914668df35948920b6c1c259b933e0519a69b7003fc0a5ed2a766b1e1dda02574450c566b21738a45f15e274b47c2ac02072c0d1f3ac3
-  languageName: node
-  linkType: hard
-
-"decimal.js@npm:^10.6.0":
-  version: 10.6.0
-  resolution: "decimal.js@npm:10.6.0"
-  checksum: 10c0/07d69fbcc54167a340d2d97de95f546f9ff1f69d2b45a02fd7a5292412df3cd9eb7e23065e532a318f5474a2e1bccf8392fdf0443ef467f97f3bf8cb0477e5aa
   languageName: node
   linkType: hard
 
@@ -28719,6 +28719,15 @@ __metadata:
   version: 2.1.0
   resolution: "denque@npm:2.1.0"
   checksum: 10c0/f9ef81aa0af9c6c614a727cb3bd13c5d7db2af1abf9e6352045b86e85873e629690f6222f4edd49d10e4ccf8f078bbeec0794fafaf61b659c0589d0c511ec363
+  languageName: node
+  linkType: hard
+
+"dentaku@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "dentaku@npm:0.1.0"
+  dependencies:
+    decimal.js: "npm:10.6.0"
+  checksum: 10c0/d951237b8fe270b69e0fbead1f3721cbd5f4eefba5f6ef99be291ba5f0b9abb224e6fa507e3e42805461fe1f5cf0122d2f7d208e874f0babb611d18d21066b6a
   languageName: node
   linkType: hard
 
@@ -49801,6 +49810,7 @@ __metadata:
     cron-parser: "npm:5.1.1"
     dataloader: "npm:2.2.2"
     date-fns: "npm:4.4.0"
+    dentaku: "npm:^0.1.0"
     digest-fetch: "npm:^3.1.1"
     dompurify: "npm:^3.4.11"
     dotenv: "npm:16.4.5"
