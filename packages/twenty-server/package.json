@@ -95,7 +95,7 @@
     "cron-parser": "5.1.1",
     "dataloader": "2.2.2",
     "date-fns": "4.4.0",
-    "dentaku": "^0.1.0",
+    "dentaku": "patch:dentaku@0.1.0#./patches/dentaku+0.1.0.patch",
     "digest-fetch": "^3.1.1",
     "dompurify": "^3.4.11",
     "dotenv": "16.4.5",
