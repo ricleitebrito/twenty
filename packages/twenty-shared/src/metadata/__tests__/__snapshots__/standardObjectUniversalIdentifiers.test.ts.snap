@@ -890,6 +890,338 @@ exports[`STANDARD_OBJECTS universal identifiers should never change without an e
       },
     },
   },
+  "costTemplate": {
+    "fields": {
+      "createdAt": {
+        "universalIdentifier": "ba52f85c-3571-5cd0-b083-9502102ddced",
+      },
+      "createdBy": {
+        "universalIdentifier": "15d551fe-4df0-5042-bd0a-28cf298bd5d1",
+      },
+      "deletedAt": {
+        "universalIdentifier": "6e6ee091-ae5a-5e18-9be2-2b1df1caa894",
+      },
+      "description": {
+        "universalIdentifier": "9839aa49-6688-47be-820b-2fa6d7c1aaf6",
+      },
+      "fields": {
+        "universalIdentifier": "902e17c9-facb-4454-a4e2-33a019affe6e",
+      },
+      "id": {
+        "universalIdentifier": "2fecdfba-1f86-5ee3-9456-81ff22e4f8ad",
+      },
+      "name": {
+        "universalIdentifier": "19a623a2-3bc7-4764-a047-ec7bb7bcc35c",
+      },
+      "position": {
+        "universalIdentifier": "433e80b5-a36b-5940-a557-df7572986207",
+      },
+      "products": {
+        "universalIdentifier": "927d5b5a-9399-4460-a210-f586689bd70d",
+      },
+      "searchVector": {
+        "universalIdentifier": "12af3784-868c-5bba-ac6e-c8e4ede14cbb",
+      },
+      "steps": {
+        "universalIdentifier": "d94074c9-4d5c-4350-9107-976575c5114b",
+      },
+      "updatedAt": {
+        "universalIdentifier": "b5553ad9-0b9f-5a51-ba1a-46a7f14c248f",
+      },
+      "updatedBy": {
+        "universalIdentifier": "e817f492-3cfc-5f46-9910-069eebe8ef19",
+      },
+    },
+    "indexes": {},
+    "universalIdentifier": "4b97224d-b4eb-4edf-9254-dc8530c453eb",
+    "views": {
+      "allCostTemplates": {
+        "universalIdentifier": "64418192-6aff-56bd-a748-b96d5e9b5507",
+        "viewFields": {
+          "createdAt": {
+            "universalIdentifier": "38b601ac-0069-5079-a30e-5b96f8377930",
+          },
+          "description": {
+            "universalIdentifier": "6fa8012e-9815-57e0-a83f-2842f4a8af18",
+          },
+          "name": {
+            "universalIdentifier": "ff102959-c2fc-5b3c-a867-8ebc832ef152",
+          },
+        },
+      },
+      "costTemplateRecordPageFields": {
+        "universalIdentifier": "b8b2848c-43c5-5480-ad27-88f12b1829e3",
+        "viewFieldGroups": {
+          "general": {
+            "universalIdentifier": "1bcbd6ec-30d0-5665-aa2a-01e28754f869",
+          },
+          "system": {
+            "universalIdentifier": "04f21456-3400-5891-8f62-5defa4ed850d",
+          },
+        },
+        "viewFields": {
+          "createdAt": {
+            "universalIdentifier": "62efd882-b264-5eaa-9c4a-aeadc706834c",
+          },
+          "createdBy": {
+            "universalIdentifier": "47b1a0cd-5141-57be-a291-13f6ed15d37f",
+          },
+          "description": {
+            "universalIdentifier": "74bfc553-f888-570d-8498-e19751cf138c",
+          },
+          "fields": {
+            "universalIdentifier": "92432d47-e816-59a2-9718-1a7a93ebcc82",
+          },
+          "products": {
+            "universalIdentifier": "0e61aa73-29d7-5230-929e-53c169e5e969",
+          },
+          "steps": {
+            "universalIdentifier": "0adb3b11-eeba-5d64-84ff-75822a9d81e8",
+          },
+          "updatedAt": {
+            "universalIdentifier": "9d2f95c5-2ef9-55f5-be6e-f342f69c12c4",
+          },
+          "updatedBy": {
+            "universalIdentifier": "0d016faa-aa91-56e5-8e51-ce9424d26c09",
+          },
+        },
+      },
+    },
+  },
+  "costTemplateField": {
+    "fields": {
+      "costTemplate": {
+        "universalIdentifier": "b6c62b3e-1ee7-4b9e-abd1-c6fac3f882f3",
+      },
+      "createdAt": {
+        "universalIdentifier": "d6c8a4ef-ef6e-5979-bc2d-f1fd09516c07",
+      },
+      "createdBy": {
+        "universalIdentifier": "2ad1bc2a-a7c7-55cc-8fec-ff742ed95c36",
+      },
+      "defaultValue": {
+        "universalIdentifier": "2854d882-4e9c-4dd4-9c76-328692ddefdb",
+      },
+      "deletedAt": {
+        "universalIdentifier": "437fa025-492c-5668-93a0-746e7aa3ef46",
+      },
+      "fieldType": {
+        "universalIdentifier": "a1e02c9b-1dfe-45da-acb6-6e760f7a1a86",
+      },
+      "id": {
+        "universalIdentifier": "4a653b0d-f107-5551-942a-9c41800f922e",
+      },
+      "isRequired": {
+        "universalIdentifier": "a7430f0a-7b02-4f86-9e3f-c2df7862adbc",
+      },
+      "name": {
+        "universalIdentifier": "b22a5140-de53-4770-a46f-8d319e4d81dd",
+      },
+      "picklistOptions": {
+        "universalIdentifier": "79c5454d-1d20-4b41-bfa8-9c4d67df48c1",
+      },
+      "position": {
+        "universalIdentifier": "ba6b9144-34a3-5e6f-bc0f-78725206a148",
+      },
+      "searchVector": {
+        "universalIdentifier": "aca4c866-af0b-5748-9594-80730cd3fa87",
+      },
+      "updatedAt": {
+        "universalIdentifier": "9cf8d40d-e12b-500e-b6b8-73b8bbfb4d4f",
+      },
+      "updatedBy": {
+        "universalIdentifier": "c46a9e1e-cad6-5a4e-b2ed-07f529efd853",
+      },
+      "variableName": {
+        "universalIdentifier": "278497f1-e8e7-48d2-bc85-7d2d2885813e",
+      },
+    },
+    "indexes": {
+      "costTemplateIdIndex": {
+        "universalIdentifier": "f5624466-eccd-489c-9734-36df3adddf2b",
+      },
+      "variableNameUniqueIndex": {
+        "universalIdentifier": "71248106-02a7-4390-9c8e-d768c1dda564",
+      },
+    },
+    "universalIdentifier": "505f9acd-2de3-4b81-b23e-a8b5cfaeb8d3",
+    "views": {
+      "allCostTemplateFields": {
+        "universalIdentifier": "c18ba16a-042d-5d5d-9154-50ce0a4926b5",
+        "viewFields": {
+          "fieldType": {
+            "universalIdentifier": "5635f40a-f869-51ae-90f1-e7eac6eac028",
+          },
+          "isRequired": {
+            "universalIdentifier": "477fb811-3e3c-5693-867b-8c5156282b89",
+          },
+          "name": {
+            "universalIdentifier": "7ec37a78-eae0-5182-98fb-e2d48f4ac578",
+          },
+          "variableName": {
+            "universalIdentifier": "bc5b8d5d-bdc3-54db-ab05-e0fa41df6f96",
+          },
+        },
+      },
+      "costTemplateFieldRecordPageFields": {
+        "universalIdentifier": "e61d4a67-e78d-53e6-a5de-f13462f12bc1",
+        "viewFieldGroups": {
+          "general": {
+            "universalIdentifier": "c226c3f9-5d5d-594f-b225-293694ab3abe",
+          },
+          "system": {
+            "universalIdentifier": "ace48b0e-9e50-534e-8e2a-fdd2bcbe85c9",
+          },
+        },
+        "viewFields": {
+          "costTemplate": {
+            "universalIdentifier": "661a4260-c96f-590a-bc48-d0712165f516",
+          },
+          "createdAt": {
+            "universalIdentifier": "81114f76-f4cb-5ce7-821c-aeeab0b8469a",
+          },
+          "createdBy": {
+            "universalIdentifier": "b92ff900-a191-55de-bfbb-f8aa630ac65c",
+          },
+          "defaultValue": {
+            "universalIdentifier": "a24fe253-54ad-5eb6-b162-9c23a6b321ad",
+          },
+          "fieldType": {
+            "universalIdentifier": "060ed2b1-0196-57ac-af47-e8287f71a657",
+          },
+          "isRequired": {
+            "universalIdentifier": "a47847db-cd1c-5dda-8830-f752797d7e8e",
+          },
+          "name": {
+            "universalIdentifier": "0469266f-146c-5e93-ba6a-689c6609e85e",
+          },
+          "picklistOptions": {
+            "universalIdentifier": "f4a7492f-ca0d-5027-927e-7645f64c11d6",
+          },
+          "updatedAt": {
+            "universalIdentifier": "8e856819-69f2-5f02-837e-030adbe8649b",
+          },
+          "updatedBy": {
+            "universalIdentifier": "554162e0-92b4-5ac7-a600-bc7f30cca673",
+          },
+          "variableName": {
+            "universalIdentifier": "0bcebba0-383a-54fc-8f8a-aeb9fcff541e",
+          },
+        },
+      },
+    },
+  },
+  "costTemplateStep": {
+    "fields": {
+      "costTemplate": {
+        "universalIdentifier": "a0bd1be9-2e8f-4a6b-bd22-e562a503b458",
+      },
+      "createdAt": {
+        "universalIdentifier": "e6fa0dde-376b-5c7a-b14c-3fbbf3e3c304",
+      },
+      "createdBy": {
+        "universalIdentifier": "e182fd67-07d0-546c-82a8-013ab91e2b71",
+      },
+      "deletedAt": {
+        "universalIdentifier": "e4c381ea-281f-55dc-883e-f1ad58d06f6c",
+      },
+      "formula": {
+        "universalIdentifier": "f9fccb36-35f0-4b99-8e2b-7b368b5211cc",
+      },
+      "id": {
+        "universalIdentifier": "11dd3488-4feb-5524-a8aa-e3df808b29cc",
+      },
+      "isOutput": {
+        "universalIdentifier": "9866f38a-fa49-45f1-9866-b95cfef9f60f",
+      },
+      "name": {
+        "universalIdentifier": "e912594a-a8a5-4829-a130-b1a903050dc3",
+      },
+      "position": {
+        "universalIdentifier": "42cd9a34-672f-5291-8e43-03d071f45029",
+      },
+      "searchVector": {
+        "universalIdentifier": "c8fd7263-f1f8-5045-8bfd-546c5d15d546",
+      },
+      "updatedAt": {
+        "universalIdentifier": "9381d4a3-57c6-566f-9304-931a2f9b27b6",
+      },
+      "updatedBy": {
+        "universalIdentifier": "b51b47e7-11c5-53a8-b480-76b982c0ac3f",
+      },
+      "variableName": {
+        "universalIdentifier": "4845d073-67a4-4c03-92a6-635e3179ec28",
+      },
+    },
+    "indexes": {
+      "costTemplateIdIndex": {
+        "universalIdentifier": "b991d0e5-7fda-43c7-809f-b70a1ecd0929",
+      },
+      "variableNameUniqueIndex": {
+        "universalIdentifier": "1614d837-c2cc-4b36-af21-b9e0383ccae2",
+      },
+    },
+    "universalIdentifier": "69c4f626-ec37-4dcf-84e1-59c173a75acf",
+    "views": {
+      "allCostTemplateSteps": {
+        "universalIdentifier": "cb20f308-174f-55c0-bfc9-c01377f25957",
+        "viewFields": {
+          "formula": {
+            "universalIdentifier": "c308f1c9-8fb3-55de-ada1-d35085bfe282",
+          },
+          "isOutput": {
+            "universalIdentifier": "5d4712d1-5196-5173-9f63-0dc1243e53c9",
+          },
+          "name": {
+            "universalIdentifier": "e35a7b37-3001-5d7d-878c-7f588eb81d97",
+          },
+          "variableName": {
+            "universalIdentifier": "8ed853d0-bddd-5f78-a263-519c1b8edbe6",
+          },
+        },
+      },
+      "costTemplateStepRecordPageFields": {
+        "universalIdentifier": "ff0f00ad-de97-542c-a895-8f58c0318b2d",
+        "viewFieldGroups": {
+          "general": {
+            "universalIdentifier": "6939f81f-8cd8-5d9c-8244-8db3dd96e6bc",
+          },
+          "system": {
+            "universalIdentifier": "f72836bf-de26-5eed-9427-0a43385fa3ad",
+          },
+        },
+        "viewFields": {
+          "costTemplate": {
+            "universalIdentifier": "293aa03f-dff5-57c2-9e4e-0703263c3063",
+          },
+          "createdAt": {
+            "universalIdentifier": "a29a25eb-2e89-5d18-95a9-2eb6d8aa4ed7",
+          },
+          "createdBy": {
+            "universalIdentifier": "4fe539df-d41e-5fee-8c66-e162ddc440b6",
+          },
+          "formula": {
+            "universalIdentifier": "7c5dc245-e9ea-5e54-a9aa-ee1d495fc064",
+          },
+          "isOutput": {
+            "universalIdentifier": "fc7ebf35-5e03-564c-9e93-d6cbf913c76c",
+          },
+          "name": {
+            "universalIdentifier": "ba5ba759-c9c8-5383-9a8a-1a6b017f7a5a",
+          },
+          "updatedAt": {
+            "universalIdentifier": "b63a30b8-3853-582c-8c5a-e9ef814713be",
+          },
+          "updatedBy": {
+            "universalIdentifier": "96a896e9-0871-5acc-8925-299e285af1ee",
+          },
+          "variableName": {
+            "universalIdentifier": "ecde182d-67c6-59ae-a2fd-dd64ddbc3a0a",
+          },
+        },
+      },
+    },
+  },
   "dashboard": {
     "fields": {
       "attachments": {
@@ -2275,6 +2607,120 @@ exports[`STANDARD_OBJECTS universal identifiers should never change without an e
           },
           "updatedBy": {
             "universalIdentifier": "8783172f-3146-5a14-9939-81bef3bf4cca",
+          },
+        },
+      },
+    },
+  },
+  "product": {
+    "fields": {
+      "basePrice": {
+        "universalIdentifier": "0ecd51c8-907a-44bf-bd20-e83d3668f4b8",
+      },
+      "costTemplate": {
+        "universalIdentifier": "795d115f-824e-4f30-af84-9dd41021a7cc",
+      },
+      "createdAt": {
+        "universalIdentifier": "6d75b359-8025-57cd-978f-e408d3571de8",
+      },
+      "createdBy": {
+        "universalIdentifier": "fb445937-42cc-5909-bb93-751e15eff547",
+      },
+      "deletedAt": {
+        "universalIdentifier": "2d2601d7-56dc-5deb-b37e-e3d22cbf819e",
+      },
+      "description": {
+        "universalIdentifier": "23b6cee9-fd65-434d-9db0-e3b4fc6cc54f",
+      },
+      "id": {
+        "universalIdentifier": "e3c185c4-656f-57a6-a0a2-b9bf08706e26",
+      },
+      "isActive": {
+        "universalIdentifier": "01ff2b15-0eb1-408b-9584-d1e5126cd8cd",
+      },
+      "name": {
+        "universalIdentifier": "8b8b51ba-4383-4f80-87ae-62453471886e",
+      },
+      "position": {
+        "universalIdentifier": "c06cebfa-b2ab-526f-ab98-0a257e50a26d",
+      },
+      "searchVector": {
+        "universalIdentifier": "ef83e580-604b-5640-84a3-fc3b80dc7b4a",
+      },
+      "sku": {
+        "universalIdentifier": "b2c51aee-9efa-44f4-aead-ed3798c4474b",
+      },
+      "updatedAt": {
+        "universalIdentifier": "589a8f90-67f4-5102-88f4-22206361ccf5",
+      },
+      "updatedBy": {
+        "universalIdentifier": "2cf25618-7c57-55f2-86ec-235b9adfb276",
+      },
+    },
+    "indexes": {
+      "costTemplateIdIndex": {
+        "universalIdentifier": "c73156e2-c65e-46df-8848-99151a2ae07e",
+      },
+    },
+    "universalIdentifier": "5f191ed3-6336-43b0-b10c-f5c9f2800c89",
+    "views": {
+      "allProducts": {
+        "universalIdentifier": "d06701a9-406f-560d-906c-0f9060f91bd6",
+        "viewFields": {
+          "basePrice": {
+            "universalIdentifier": "a9cca7e6-2b24-530c-a21c-efcfcd853e21",
+          },
+          "isActive": {
+            "universalIdentifier": "92333ae8-ce08-5596-99c3-977f29a31c98",
+          },
+          "name": {
+            "universalIdentifier": "3ee8fc8b-f3eb-5f23-bf0b-0300282f01fe",
+          },
+          "sku": {
+            "universalIdentifier": "3cafac1f-53cd-530b-9b8f-591e7992a483",
+          },
+        },
+      },
+      "productRecordPageFields": {
+        "universalIdentifier": "4f48feb2-8a90-5929-934a-ad9f2ae69040",
+        "viewFieldGroups": {
+          "general": {
+            "universalIdentifier": "e91fa3eb-65f8-5284-a806-2f4a9daad6ae",
+          },
+          "system": {
+            "universalIdentifier": "7bec7373-9b0b-51e7-a83f-db860a7c096e",
+          },
+        },
+        "viewFields": {
+          "basePrice": {
+            "universalIdentifier": "712c76e6-ffc0-5bf6-8869-a3909dc8eb1d",
+          },
+          "costTemplate": {
+            "universalIdentifier": "e2f3578a-b482-506b-998a-346ab6da158c",
+          },
+          "createdAt": {
+            "universalIdentifier": "5beeb35e-51f0-5129-b8ce-cdb15870a79d",
+          },
+          "createdBy": {
+            "universalIdentifier": "36502a39-0485-54c7-b179-1cbcaebaaf98",
+          },
+          "description": {
+            "universalIdentifier": "f86f33d8-3044-55f9-9a89-45fbad568f70",
+          },
+          "isActive": {
+            "universalIdentifier": "184e10b2-c037-5470-a7e3-353fd3856146",
+          },
+          "name": {
+            "universalIdentifier": "d92708a6-6a10-5359-8f40-6aea368ac509",
+          },
+          "sku": {
+            "universalIdentifier": "2fc60df6-3430-5c87-87f6-a83db1d03be2",
+          },
+          "updatedAt": {
+            "universalIdentifier": "bd8f41c0-7767-5159-94b3-9b35aa8cc3e4",
+          },
+          "updatedBy": {
+            "universalIdentifier": "5a43e1ea-bb79-5486-8c67-f82f3eb45e18",
           },
         },
       },

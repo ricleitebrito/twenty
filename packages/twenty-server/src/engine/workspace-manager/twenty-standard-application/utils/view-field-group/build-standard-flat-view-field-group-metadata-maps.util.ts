@@ -8,6 +8,9 @@ import { computeStandardCalendarChannelEventAssociationViewFieldGroups } from 's
 import { computeStandardCalendarEventViewFieldGroups } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field-group/compute-standard-calendar-event-view-field-groups.util';
 import { computeStandardCalendarEventParticipantViewFieldGroups } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field-group/compute-standard-calendar-event-participant-view-field-groups.util';
 import { computeStandardCallRecordingViewFieldGroups } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field-group/compute-standard-call-recording-view-field-groups.util';
+import { computeStandardCostTemplateFieldViewFieldGroups } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field-group/compute-standard-cost-template-field-view-field-groups.util';
+import { computeStandardCostTemplateViewFieldGroups } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field-group/compute-standard-cost-template-view-field-groups.util';
+import { computeStandardCostTemplateStepViewFieldGroups } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field-group/compute-standard-cost-template-step-view-field-groups.util';
 import { computeStandardCompanyViewFieldGroups } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field-group/compute-standard-company-view-field-groups.util';
 import { computeStandardMessageCampaignViewFieldGroups } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field-group/compute-standard-message-campaign-view-field-groups.util';
 import { computeStandardMessageChannelMessageAssociationViewFieldGroups } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field-group/compute-standard-message-channel-message-association-view-field-groups.util';
@@ -16,6 +19,7 @@ import { computeStandardMessageParticipantViewFieldGroups } from 'src/engine/wor
 import { computeStandardNoteViewFieldGroups } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field-group/compute-standard-note-view-field-groups.util';
 import { computeStandardOpportunityViewFieldGroups } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field-group/compute-standard-opportunity-view-field-groups.util';
 import { computeStandardPersonViewFieldGroups } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field-group/compute-standard-person-view-field-groups.util';
+import { computeStandardProductViewFieldGroups } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field-group/compute-standard-product-view-field-groups.util';
 import { computeStandardTaskViewFieldGroups } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field-group/compute-standard-task-view-field-groups.util';
 import { computeStandardWorkflowAutomatedTriggerViewFieldGroups } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field-group/compute-standard-workflow-automated-trigger-view-field-groups.util';
 import { computeStandardWorkflowRunViewFieldGroups } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field-group/compute-standard-workflow-run-view-field-groups.util';
@@ -34,6 +38,9 @@ const STANDARD_FLAT_VIEW_FIELD_GROUP_METADATA_BUILDERS_BY_OBJECT_NAME = {
   calendarEventParticipant:
     computeStandardCalendarEventParticipantViewFieldGroups,
   callRecording: computeStandardCallRecordingViewFieldGroups,
+  costTemplate: computeStandardCostTemplateViewFieldGroups,
+  costTemplateField: computeStandardCostTemplateFieldViewFieldGroups,
+  costTemplateStep: computeStandardCostTemplateStepViewFieldGroups,
   company: computeStandardCompanyViewFieldGroups,
   messageCampaign: computeStandardMessageCampaignViewFieldGroups,
   messageChannelMessageAssociation:
@@ -44,6 +51,7 @@ const STANDARD_FLAT_VIEW_FIELD_GROUP_METADATA_BUILDERS_BY_OBJECT_NAME = {
   note: computeStandardNoteViewFieldGroups,
   opportunity: computeStandardOpportunityViewFieldGroups,
   person: computeStandardPersonViewFieldGroups,
+  product: computeStandardProductViewFieldGroups,
   task: computeStandardTaskViewFieldGroups,
   workflowAutomatedTrigger:
     computeStandardWorkflowAutomatedTriggerViewFieldGroups,

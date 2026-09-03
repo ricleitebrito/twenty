@@ -1096,4 +1096,81 @@ export const STANDARD_OBJECT_FIELDS = {
       universalIdentifier: '20202020-7f40-4e7f-b126-11c0eda6b141',
     },
   },
+  costTemplate: {
+    ...buildStandardObjectSystemFields(
+      STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.costTemplate,
+    ),
+    name: { universalIdentifier: '19a623a2-3bc7-4764-a047-ec7bb7bcc35c' },
+    description: {
+      universalIdentifier: '9839aa49-6688-47be-820b-2fa6d7c1aaf6',
+    },
+    fields: {
+      universalIdentifier: '902e17c9-facb-4454-a4e2-33a019affe6e',
+    },
+    steps: {
+      universalIdentifier: 'd94074c9-4d5c-4350-9107-976575c5114b',
+    },
+    products: {
+      universalIdentifier: '927d5b5a-9399-4460-a210-f586689bd70d',
+    },
+  },
+  costTemplateField: {
+    ...buildStandardObjectSystemFields(
+      STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.costTemplateField,
+    ),
+    costTemplate: {
+      universalIdentifier: 'b6c62b3e-1ee7-4b9e-abd1-c6fac3f882f3',
+    },
+    name: { universalIdentifier: 'b22a5140-de53-4770-a46f-8d319e4d81dd' },
+    variableName: {
+      universalIdentifier: '278497f1-e8e7-48d2-bc85-7d2d2885813e',
+    },
+    fieldType: {
+      universalIdentifier: 'a1e02c9b-1dfe-45da-acb6-6e760f7a1a86',
+    },
+    picklistOptions: {
+      universalIdentifier: '79c5454d-1d20-4b41-bfa8-9c4d67df48c1',
+    },
+    defaultValue: {
+      universalIdentifier: '2854d882-4e9c-4dd4-9c76-328692ddefdb',
+    },
+    isRequired: {
+      universalIdentifier: 'a7430f0a-7b02-4f86-9e3f-c2df7862adbc',
+    },
+  },
+  costTemplateStep: {
+    ...buildStandardObjectSystemFields(
+      STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.costTemplateStep,
+    ),
+    costTemplate: {
+      universalIdentifier: 'a0bd1be9-2e8f-4a6b-bd22-e562a503b458',
+    },
+    name: { universalIdentifier: 'e912594a-a8a5-4829-a130-b1a903050dc3' },
+    variableName: {
+      universalIdentifier: '4845d073-67a4-4c03-92a6-635e3179ec28',
+    },
+    formula: { universalIdentifier: 'f9fccb36-35f0-4b99-8e2b-7b368b5211cc' },
+    isOutput: {
+      universalIdentifier: '9866f38a-fa49-45f1-9866-b95cfef9f60f',
+    },
+  },
+  product: {
+    ...buildStandardObjectSystemFields(
+      STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.product,
+    ),
+    name: { universalIdentifier: '8b8b51ba-4383-4f80-87ae-62453471886e' },
+    sku: { universalIdentifier: 'b2c51aee-9efa-44f4-aead-ed3798c4474b' },
+    description: {
+      universalIdentifier: '23b6cee9-fd65-434d-9db0-e3b4fc6cc54f',
+    },
+    basePrice: {
+      universalIdentifier: '0ecd51c8-907a-44bf-bd20-e83d3668f4b8',
+    },
+    isActive: {
+      universalIdentifier: '01ff2b15-0eb1-408b-9584-d1e5126cd8cd',
+    },
+    costTemplate: {
+      universalIdentifier: '795d115f-824e-4f30-af84-9dd41021a7cc',
+    },
+  },
 } satisfies Record<string, Record<string, { universalIdentifier: string }>>;

@@ -9,6 +9,9 @@ import { computeStandardCalendarChannelEventAssociationViews } from 'src/engine/
 import { computeStandardCalendarEventParticipantViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-calendar-event-participant-views.util';
 import { computeStandardCalendarEventViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-calendar-event-views.util';
 import { computeStandardCallRecordingViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-call-recording-views.util';
+import { computeStandardCostTemplateFieldViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-cost-template-field-views.util';
+import { computeStandardCostTemplateViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-cost-template-views.util';
+import { computeStandardCostTemplateStepViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-cost-template-step-views.util';
 import { computeStandardCompanyViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-company-views.util';
 import { computeStandardDashboardViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-dashboard-views.util';
 import { computeStandardMessageCampaignViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-message-campaign-views.util';
@@ -22,6 +25,7 @@ import { computeStandardNoteTargetViews } from 'src/engine/workspace-manager/twe
 import { computeStandardNoteViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-note-views.util';
 import { computeStandardOpportunityViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-opportunity-views.util';
 import { computeStandardPersonViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-person-views.util';
+import { computeStandardProductViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-product-views.util';
 import { computeStandardTaskTargetViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-task-target-views.util';
 import { computeStandardTaskViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-task-views.util';
 import { computeStandardTimelineActivityViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-timeline-activity-views.util';
@@ -44,6 +48,9 @@ const STANDARD_FLAT_VIEW_METADATA_BUILDERS_BY_OBJECT_NAME = {
   calendarEvent: computeStandardCalendarEventViews,
   calendarEventParticipant: computeStandardCalendarEventParticipantViews,
   callRecording: computeStandardCallRecordingViews,
+  costTemplate: computeStandardCostTemplateViews,
+  costTemplateField: computeStandardCostTemplateFieldViews,
+  costTemplateStep: computeStandardCostTemplateStepViews,
   company: computeStandardCompanyViews,
   dashboard: computeStandardDashboardViews,
   message: computeStandardMessageViews,
@@ -59,6 +66,7 @@ const STANDARD_FLAT_VIEW_METADATA_BUILDERS_BY_OBJECT_NAME = {
   noteTarget: computeStandardNoteTargetViews,
   opportunity: computeStandardOpportunityViews,
   person: computeStandardPersonViews,
+  product: computeStandardProductViews,
   task: computeStandardTaskViews,
   taskTarget: computeStandardTaskTargetViews,
   timelineActivity: computeStandardTimelineActivityViews,

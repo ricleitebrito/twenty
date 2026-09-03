@@ -1249,6 +1249,164 @@ export const STANDARD_OBJECTS = {
       }),
     },
   },
+  costTemplate: {
+    universalIdentifier: STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.costTemplate,
+    fields: STANDARD_OBJECT_FIELDS.costTemplate,
+    indexes: {},
+    views: {
+      allCostTemplates: buildStandardObjectIndexView({
+        objectUniversalIdentifier:
+          STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.costTemplate,
+        fields: STANDARD_OBJECT_FIELDS.costTemplate,
+        viewFieldNames: ['name', 'description', 'createdAt'],
+      }),
+      costTemplateRecordPageFields: buildStandardObjectRecordPageFieldsView({
+        objectUniversalIdentifier:
+          STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.costTemplate,
+        fields: STANDARD_OBJECT_FIELDS.costTemplate,
+        viewFieldNames: [
+          // name is excluded here, matching company/opportunity/person/note/task —
+          // it already renders in the record page header.
+          'description',
+          'fields',
+          'steps',
+          'products',
+          'createdAt',
+          'createdBy',
+          'updatedAt',
+          'updatedBy',
+        ],
+        viewFieldGroupNames: {
+          general: 'General',
+          system: 'System',
+        },
+      }),
+    },
+  },
+  costTemplateField: {
+    universalIdentifier:
+      STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.costTemplateField,
+    fields: STANDARD_OBJECT_FIELDS.costTemplateField,
+    indexes: {
+      costTemplateIdIndex: {
+        universalIdentifier: 'f5624466-eccd-489c-9734-36df3adddf2b',
+      },
+      variableNameUniqueIndex: {
+        universalIdentifier: '71248106-02a7-4390-9c8e-d768c1dda564',
+      },
+    },
+    views: {
+      allCostTemplateFields: buildStandardObjectIndexView({
+        objectUniversalIdentifier:
+          STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.costTemplateField,
+        fields: STANDARD_OBJECT_FIELDS.costTemplateField,
+        viewFieldNames: ['name', 'variableName', 'fieldType', 'isRequired'],
+      }),
+      costTemplateFieldRecordPageFields:
+        buildStandardObjectRecordPageFieldsView({
+          objectUniversalIdentifier:
+            STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.costTemplateField,
+          fields: STANDARD_OBJECT_FIELDS.costTemplateField,
+          viewFieldNames: [
+            'costTemplate',
+            'name',
+            'variableName',
+            'fieldType',
+            'picklistOptions',
+            'defaultValue',
+            'isRequired',
+            'createdAt',
+            'createdBy',
+            'updatedAt',
+            'updatedBy',
+          ],
+          viewFieldGroupNames: {
+            general: 'General',
+            system: 'System',
+          },
+        }),
+    },
+  },
+  costTemplateStep: {
+    universalIdentifier: STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.costTemplateStep,
+    fields: STANDARD_OBJECT_FIELDS.costTemplateStep,
+    indexes: {
+      costTemplateIdIndex: {
+        universalIdentifier: 'b991d0e5-7fda-43c7-809f-b70a1ecd0929',
+      },
+      variableNameUniqueIndex: {
+        universalIdentifier: '1614d837-c2cc-4b36-af21-b9e0383ccae2',
+      },
+    },
+    views: {
+      allCostTemplateSteps: buildStandardObjectIndexView({
+        objectUniversalIdentifier:
+          STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.costTemplateStep,
+        fields: STANDARD_OBJECT_FIELDS.costTemplateStep,
+        viewFieldNames: ['name', 'variableName', 'formula', 'isOutput'],
+      }),
+      costTemplateStepRecordPageFields: buildStandardObjectRecordPageFieldsView(
+        {
+          objectUniversalIdentifier:
+            STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.costTemplateStep,
+          fields: STANDARD_OBJECT_FIELDS.costTemplateStep,
+          viewFieldNames: [
+            'costTemplate',
+            'name',
+            'variableName',
+            'formula',
+            'isOutput',
+            'createdAt',
+            'createdBy',
+            'updatedAt',
+            'updatedBy',
+          ],
+          viewFieldGroupNames: {
+            general: 'General',
+            system: 'System',
+          },
+        },
+      ),
+    },
+  },
+  product: {
+    universalIdentifier: STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.product,
+    fields: STANDARD_OBJECT_FIELDS.product,
+    indexes: {
+      costTemplateIdIndex: {
+        universalIdentifier: 'c73156e2-c65e-46df-8848-99151a2ae07e',
+      },
+    },
+    views: {
+      allProducts: buildStandardObjectIndexView({
+        objectUniversalIdentifier:
+          STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.product,
+        fields: STANDARD_OBJECT_FIELDS.product,
+        viewFieldNames: ['name', 'sku', 'basePrice', 'isActive'],
+      }),
+      productRecordPageFields: buildStandardObjectRecordPageFieldsView({
+        objectUniversalIdentifier:
+          STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.product,
+        fields: STANDARD_OBJECT_FIELDS.product,
+        viewFieldNames: [
+          'name',
+          'sku',
+          'description',
+          'basePrice',
+          'isActive',
+          'costTemplate',
+          'createdAt',
+          'createdBy',
+          'updatedAt',
+          'updatedBy',
+        ],
+        viewFieldGroupNames: {
+          general: 'General',
+          system: 'System',
+        },
+      }),
+    },
+  },
 } as const satisfies Record<
   string,
   {

@@ -9,6 +9,9 @@ import { computeStandardCalendarChannelEventAssociationViewFields } from 'src/en
 import { computeStandardCalendarEventParticipantViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-calendar-event-participant-view-fields.util';
 import { computeStandardCalendarEventViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-calendar-event-view-fields.util';
 import { computeStandardCallRecordingViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-call-recording-view-fields.util';
+import { computeStandardCostTemplateFieldViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-cost-template-field-view-fields.util';
+import { computeStandardCostTemplateViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-cost-template-view-fields.util';
+import { computeStandardCostTemplateStepViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-cost-template-step-view-fields.util';
 import { computeStandardCompanyViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-company-view-fields.util';
 import { computeStandardDashboardViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-dashboard-view-fields.util';
 import { computeStandardMessageCampaignViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-message-campaign-view-fields.util';
@@ -22,6 +25,7 @@ import { computeStandardNoteTargetViewFields } from 'src/engine/workspace-manage
 import { computeStandardNoteViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-note-view-fields.util';
 import { computeStandardOpportunityViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-opportunity-view-fields.util';
 import { computeStandardPersonViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-person-view-fields.util';
+import { computeStandardProductViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-product-view-fields.util';
 import { computeStandardTaskTargetViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-task-target-view-fields.util';
 import { computeStandardTaskViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-task-view-fields.util';
 import { computeStandardTimelineActivityViewFields } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field/compute-standard-timeline-activity-view-fields.util';
@@ -44,6 +48,9 @@ const STANDARD_FLAT_VIEW_FIELD_METADATA_BUILDERS_BY_OBJECT_NAME = {
   calendarEvent: computeStandardCalendarEventViewFields,
   calendarEventParticipant: computeStandardCalendarEventParticipantViewFields,
   callRecording: computeStandardCallRecordingViewFields,
+  costTemplate: computeStandardCostTemplateViewFields,
+  costTemplateField: computeStandardCostTemplateFieldViewFields,
+  costTemplateStep: computeStandardCostTemplateStepViewFields,
   company: computeStandardCompanyViewFields,
   dashboard: computeStandardDashboardViewFields,
   message: computeStandardMessageViewFields,
@@ -59,6 +66,7 @@ const STANDARD_FLAT_VIEW_FIELD_METADATA_BUILDERS_BY_OBJECT_NAME = {
   noteTarget: computeStandardNoteTargetViewFields,
   opportunity: computeStandardOpportunityViewFields,
   person: computeStandardPersonViewFields,
+  product: computeStandardProductViewFields,
   task: computeStandardTaskViewFields,
   taskTarget: computeStandardTaskTargetViewFields,
   timelineActivity: computeStandardTimelineActivityViewFields,
