@@ -94,7 +94,9 @@ export class QuoteLineCreateManyPreQueryHook implements WorkspacePreQueryHookIns
         { errors: string[] }
       >;
       const currencyCode =
-        record.unitPrice?.currencyCode ?? DEFAULT_QUOTE_LINE_CURRENCY_CODE;
+        record.unitPrice?.currencyCode ??
+        result.productCurrencyCode ??
+        DEFAULT_QUOTE_LINE_CURRENCY_CODE;
 
       payload.data[index].unitPrice = amountToCurrencyMetadata(
         result.unitPrice,

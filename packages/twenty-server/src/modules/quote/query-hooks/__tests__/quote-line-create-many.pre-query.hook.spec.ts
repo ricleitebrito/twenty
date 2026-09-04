@@ -59,6 +59,27 @@ describe('QuoteLineCreateManyPreQueryHook', () => {
     });
   });
 
+  // Regression: falls back to each record's product basePrice currencyCode
+  // ahead of the hardcoded USD default.
+  it("falls back to the product's basePrice currencyCode instead of the hardcoded USD default", async () => {
+    quoteLinePricingService.computePricing.mockResolvedValueOnce({
+      unitPrice: 50,
+      totalPrice: 90,
+      productCurrencyCode: 'EUR',
+    });
+
+    const payload = buildPayload([
+      { productId: 'product-1', quantity: 2, discountPercent: 10 },
+    ]);
+
+    const result = await hook.execute(authContext, 'quoteLine', payload);
+
+    expect(result.data[0].unitPrice).toEqual({
+      amountMicros: 50_000_000,
+      currencyCode: 'EUR',
+    });
+  });
+
   it('fails the whole batch, naming every failing record, when any record cannot be priced', async () => {
     quoteLinePricingService.computePricing
       .mockResolvedValueOnce({ unitPrice: 50, totalPrice: 90 })

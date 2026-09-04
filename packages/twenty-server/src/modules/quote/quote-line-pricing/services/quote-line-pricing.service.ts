@@ -29,7 +29,17 @@ export type ComputePricingArgs = {
 };
 
 export type QuoteLinePricingResult =
-  | { unitPrice: number; totalPrice: number }
+  | {
+      unitPrice: number;
+      totalPrice: number;
+      // Only set on the has-costTemplate (computed) path — the product's
+      // basePrice.currencyCode, offered to the caller as a fallback ahead of
+      // the hardcoded USD default when there's no existing/manual
+      // CurrencyMetadata to inherit a currencyCode from. Left undefined on
+      // the manual-entry (no costTemplate) path: there's nothing better
+      // there than whatever the caller already provided.
+      productCurrencyCode?: string;
+    }
   | { errors: string[] };
 
 type ResolveEffectiveQuoteLineStateArgs = {
@@ -218,6 +228,7 @@ export class QuoteLinePricingService {
     return {
       unitPrice,
       totalPrice: computeTotalPrice({ unitPrice, quantity, discountPercent }),
+      productCurrencyCode: product.basePrice?.currencyCode,
     };
   }
 }

@@ -60,7 +60,9 @@ export class QuoteLineCreateOnePreQueryHook implements WorkspacePreQueryHookInst
     }
 
     const currencyCode =
-      payload.data.unitPrice?.currencyCode ?? DEFAULT_QUOTE_LINE_CURRENCY_CODE;
+      payload.data.unitPrice?.currencyCode ??
+      result.productCurrencyCode ??
+      DEFAULT_QUOTE_LINE_CURRENCY_CODE;
 
     payload.data.unitPrice = amountToCurrencyMetadata(
       result.unitPrice,

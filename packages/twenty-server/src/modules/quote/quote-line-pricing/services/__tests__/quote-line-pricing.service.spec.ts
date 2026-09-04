@@ -87,6 +87,66 @@ describe('QuoteLinePricingService', () => {
       });
     });
 
+    it("surfaces the product's basePrice currencyCode alongside a computed price", async () => {
+      productRepository.findOne.mockResolvedValue({
+        id: 'product-1',
+        basePrice: { amountMicros: 100_000_000, currencyCode: 'EUR' },
+        costTemplate: {
+          id: 'cost-template-1',
+          fields: [
+            {
+              id: 'field-1',
+              variableName: 'seats',
+              fieldType: 'NUMBER',
+              isRequired: true,
+            },
+          ],
+          steps: [
+            {
+              id: 'step-1',
+              variableName: 'total',
+              formula: 'seats * 10',
+              isOutput: true,
+            },
+          ],
+        },
+      });
+
+      await expect(
+        service.computePricing({
+          workspaceId: 'workspace-1',
+          productId: 'product-1',
+          fieldValues: { seats: 5 },
+          quantity: 1,
+          discountPercent: null,
+          manualUnitPrice: undefined,
+        }),
+      ).resolves.toEqual({
+        unitPrice: 50,
+        totalPrice: 50,
+        productCurrencyCode: 'EUR',
+      });
+    });
+
+    it('does not surface a productCurrencyCode on the manual-entry (no cost template) path', async () => {
+      productRepository.findOne.mockResolvedValue({
+        id: 'product-2',
+        basePrice: { amountMicros: 100_000_000, currencyCode: 'EUR' },
+        costTemplate: null,
+      });
+
+      await expect(
+        service.computePricing({
+          workspaceId: 'workspace-1',
+          productId: 'product-2',
+          fieldValues: {},
+          quantity: 1,
+          discountPercent: null,
+          manualUnitPrice: 42,
+        }),
+      ).resolves.toEqual({ unitPrice: 42, totalPrice: 42 });
+    });
+
     it('returns the manually-provided unitPrice unchanged when the product has no cost template', async () => {
       productRepository.findOne.mockResolvedValue({
         id: 'product-2',

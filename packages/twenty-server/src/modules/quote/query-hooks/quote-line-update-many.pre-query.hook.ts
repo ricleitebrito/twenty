@@ -134,6 +134,15 @@ export class QuoteLineUpdateManyPreQueryHook implements WorkspacePreQueryHookIns
     // otherwise silently applying one line's price to every other line in
     // the batch would corrupt data, so this fails loudly instead and asks
     // the caller to update lines individually.
+    //
+    // This means the most common realistic bulk-edit action (a uniform
+    // discountPercent bump across QuoteLines on different products, which
+    // will almost always price differently) is currently always rejected.
+    // Tracked as a known limitation, not a silent gap — see the plan's
+    // "Known limitation surfaced during Task 3" section in
+    // docs/superpowers/plans/2026-09-03-quote-cpq-quote-quoteline-objects.md
+    // for the follow-up (a dedicated bulk-recompute mechanism, or a product
+    // decision that price-affecting bulk edits go one-at-a-time).
     if (!allIdentical) {
       throw new CommonQueryRunnerException(
         'This update would compute different prices for different quote lines in the batch, which updateMany cannot apply per-record',
@@ -147,6 +156,7 @@ export class QuoteLineUpdateManyPreQueryHook implements WorkspacePreQueryHookIns
     const currencyCode =
       payload.data.unitPrice?.currencyCode ??
       pricingInputs[0].state.unitPrice?.currencyCode ??
+      first.productCurrencyCode ??
       DEFAULT_QUOTE_LINE_CURRENCY_CODE;
 
     payload.data.unitPrice = amountToCurrencyMetadata(

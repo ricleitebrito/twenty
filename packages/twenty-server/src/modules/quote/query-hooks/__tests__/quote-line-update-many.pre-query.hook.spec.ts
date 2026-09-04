@@ -99,6 +99,38 @@ describe('QuoteLineUpdateManyPreQueryHook', () => {
     });
   });
 
+  // Regression: falls back to the (first matched line's) product basePrice
+  // currencyCode ahead of the hardcoded USD default.
+  it("falls back to the product's basePrice currencyCode instead of the hardcoded USD default", async () => {
+    quoteLinePricingService.resolveEffectiveState.mockImplementation(
+      ({ recordId }: { recordId: string }) =>
+        Promise.resolve({
+          productId: 'product-1',
+          fieldValues: { seats: 5 },
+          quantity: 2,
+          discountPercent: 10,
+          unitPrice: null,
+          recordId,
+        }),
+    );
+    quoteLinePricingService.computePricing.mockResolvedValue({
+      unitPrice: 50,
+      totalPrice: 90,
+      productCurrencyCode: 'EUR',
+    });
+
+    const result = await hook.execute(
+      authContext,
+      'quoteLine',
+      buildPayload(['line-1', 'line-2'], { discountPercent: 10 }),
+    );
+
+    expect(result.data.unitPrice).toEqual({
+      amountMicros: 50_000_000,
+      currencyCode: 'EUR',
+    });
+  });
+
   it('throws when the matched lines would price differently, without mutating data', async () => {
     quoteLinePricingService.resolveEffectiveState.mockImplementation(
       ({ recordId }: { recordId: string }) =>

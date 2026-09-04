@@ -105,6 +105,45 @@ describe('QuoteLineCreateOnePreQueryHook', () => {
     });
   });
 
+  // Regression: the currency fallback chain must prefer the product's own
+  // basePrice.currencyCode over the hardcoded USD default when there's no
+  // existing/manual CurrencyMetadata to inherit from.
+  it("falls back to the product's basePrice currencyCode instead of the hardcoded USD default", async () => {
+    quoteLinePricingService.computePricing.mockResolvedValue({
+      unitPrice: 50,
+      totalPrice: 90,
+      productCurrencyCode: 'EUR',
+    });
+
+    const payload = buildPayload({ productId: 'product-1' });
+    const result = await hook.execute(authContext, 'quoteLine', payload);
+
+    expect(result.data.unitPrice).toEqual({
+      amountMicros: 50_000_000,
+      currencyCode: 'EUR',
+    });
+    expect(result.data.totalPrice).toEqual({
+      amountMicros: 90_000_000,
+      currencyCode: 'EUR',
+    });
+  });
+
+  it('prefers a manually-provided currencyCode over the product basePrice currencyCode', async () => {
+    quoteLinePricingService.computePricing.mockResolvedValue({
+      unitPrice: 50,
+      totalPrice: 90,
+      productCurrencyCode: 'EUR',
+    });
+
+    const payload = buildPayload({
+      productId: 'product-1',
+      unitPrice: { amountMicros: 1, currencyCode: 'GBP' },
+    });
+    const result = await hook.execute(authContext, 'quoteLine', payload);
+
+    expect(result.data.unitPrice?.currencyCode).toBe('GBP');
+  });
+
   it('throws a CommonQueryRunnerException when pricing computation fails', async () => {
     quoteLinePricingService.computePricing.mockResolvedValue({
       errors: ['Field "seats" is required but no value was provided'],

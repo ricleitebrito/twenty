@@ -127,6 +127,35 @@ describe('QuoteLineUpdateOnePreQueryHook', () => {
     });
   });
 
+  // Regression: falls back to the product's basePrice currencyCode ahead of
+  // the hardcoded USD default when there's no existing unitPrice to inherit
+  // a currencyCode from.
+  it("falls back to the product's basePrice currencyCode instead of the hardcoded USD default", async () => {
+    quoteLinePricingService.resolveEffectiveState.mockResolvedValue({
+      productId: 'product-1',
+      fieldValues: { seats: 5 },
+      quantity: 2,
+      discountPercent: 10,
+      unitPrice: null,
+    });
+    quoteLinePricingService.computePricing.mockResolvedValue({
+      unitPrice: 50,
+      totalPrice: 90,
+      productCurrencyCode: 'EUR',
+    });
+
+    const result = await hook.execute(
+      authContext,
+      'quoteLine',
+      buildPayload('quote-line-1', { discountPercent: 10 }),
+    );
+
+    expect(result.data.unitPrice).toEqual({
+      amountMicros: 50_000_000,
+      currencyCode: 'EUR',
+    });
+  });
+
   it('throws a CommonQueryRunnerException when pricing computation fails', async () => {
     quoteLinePricingService.resolveEffectiveState.mockResolvedValue({
       productId: 'product-1',
