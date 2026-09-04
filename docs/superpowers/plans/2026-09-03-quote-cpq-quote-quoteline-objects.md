@@ -1051,9 +1051,104 @@ If the real `database:reset`/GraphQL manual verification Phase 1's Task 6 attemp
 
 **A second, worse, silent half of this same constraint:** the hook only recomputes pricing when `payload.filter?.id?.in` is a non-empty array (`quote-line-update-many.pre-query.hook.ts`, the `ids` guard near the top of `execute`) — the assumption being that this app's bulk edit UI always scopes `updateMany` with `id: { in: [...] }`. If a caller instead issues `QuoteLine.updateMany` with any other filter shape (e.g. `{ quote: { eq: someQuoteId } }`), `ids` is `undefined`, the guard returns `payload` completely unmodified, and the mutation proceeds with whatever `data` patch the caller supplied — with no pricing recompute, no error, and no signal to the caller. Unlike the identical-vs-different-prices case above (which fails loudly), this path silently lets `unitPrice`/`totalPrice` go stale (or be written directly if the caller included them in `data`) for every record matched by the filter. Same pre-existing pattern as `cost-template-field-update-many.pre-query.hook.ts` from Phase 1.
 
-## Upgrade command for existing workspaces (deferred to a follow-up Task 6, same pattern as Phase 1's Task 7)
+## Task 6: Upgrade command for existing workspaces
 
-**Real, unlisted gap found by the final whole-branch review — not a silently-accepted deferral.** `Quote`/`QuoteLine` (and the reverse-relation fields added to `Opportunity`/`Company`/`Person`/`Product`/`Attachment`) only provision into brand-new workspaces (`synchronizeTwentyStandardApplicationOrThrow` runs exclusively at fresh workspace init). Existing workspaces get none of Phase 3 — and Phase 1's own `2-36/…-sync-quote-cpq-standard-objects.command.ts` cannot be reused for this, since it early-returns once `costTemplate` already exists (which it does, on any workspace that already ran Phase 1's backfill). A dedicated follow-up task, mirroring Phase 1's Task 7 process (dedicated implementer, dedicated task review, real-dev-DB dry-run verification) is required before this feature is usable on any pre-existing workspace. Sequenced as a follow-up task after this plan's fix wave, not bundled into it — the same reasoning Phase 1 used to keep its own upgrade command as a separate, fully-reviewed task rather than a quick fix-wave addition.
+**Real, unlisted gap found by the final whole-branch review — not a silently-accepted deferral.** `Quote`/`QuoteLine` (and the reverse-relation fields added to `Opportunity`/`Company`/`Person`/`Product`/`Attachment`) only provision into brand-new workspaces (`synchronizeTwentyStandardApplicationOrThrow` runs exclusively at fresh workspace init). Existing workspaces get none of Phase 3 — and Phase 1's own `2-36/…-sync-quote-cpq-standard-objects.command.ts` cannot be reused for this, since it early-returns once `costTemplate` already exists (which it does, on any workspace that already ran Phase 1's backfill).
+
+**Files:**
+- Read (template, do not modify): `packages/twenty-server/src/database/commands/upgrade-version-command/2-36/2-36-workspace-command-1788362638436-sync-quote-cpq-standard-objects.command.ts` and its spec `packages/twenty-server/src/database/commands/upgrade-version-command/2-36/__tests__/2-36-workspace-command-1788362638436-sync-quote-cpq-standard-objects.command.spec.ts` — this is Phase 1's own upgrade command for the exact same shape of problem (backfilling twenty-standard-application-owned metadata into pre-existing workspaces). It is your literal template: same base class, same early-return idiom, same `allFlatEntityOperationByMetadataName` matrix shape, same legacy-migration-path reasoning (copy that reasoning's comment forward, adapted — it applies identically here, see Step 3).
+- Create: `packages/twenty-server/src/database/commands/upgrade-version-command/2-36/2-36-workspace-command-1788526207023-sync-quote-quote-line-standard-objects.command.ts`
+- Test: `packages/twenty-server/src/database/commands/upgrade-version-command/2-36/__tests__/2-36-workspace-command-1788526207023-sync-quote-quote-line-standard-objects.command.spec.ts`
+- Modify: `packages/twenty-server/src/database/commands/upgrade-version-command/2-36/2-36-upgrade-version-command.module.ts` (register the new command's provider, mirroring how `SyncQuoteCpqStandardObjectsCommand` is registered there)
+
+**Interfaces:**
+- Consumes: `STANDARD_OBJECTS`, `STANDARD_PAGE_LAYOUT_UNIVERSAL_IDENTIFIERS` from `twenty-shared/metadata` (already contain every universal identifier this task needs — Phase 3's Tasks 1–4 and fix wave already registered them there); `ProvisionedWorkspaceCommandRunner`, `WorkspaceIteratorService`, `ApplicationService`, `WorkspaceCacheService`, `WorkspaceMigrationValidateBuildAndRunService`, `getStandardFlatEntitiesToCreateOrThrow` (all pre-existing engine infrastructure, identical imports to the template).
+- Produces: nothing further in this plan depends on this task's output — it is the final piece that makes Phase 3 usable on pre-existing workspaces.
+
+- [ ] **Step 1: Read the template files in full**
+
+Read both files listed above in full before writing anything. Every structural decision in this task (base class, matrix shape, early-return idiom, module registration, test structure) is a copy-adapt from these two files, not a fresh design.
+
+- [ ] **Step 2: Determine the exact universal-identifier set to backfill**
+
+This backfill has two distinct categories — do not conflate them:
+
+**(a) Two brand-new standard objects, `quote` and `quoteLine`** — mirror the template's per-category enumeration (`getUniversalIdentifiers(STANDARD_OBJECTS.quote.fields)` etc.) for:
+- `objectMetadata`: `STANDARD_OBJECTS.quote.universalIdentifier`, `STANDARD_OBJECTS.quoteLine.universalIdentifier`
+- `fieldMetadata`: all of `STANDARD_OBJECTS.quote.fields` and `STANDARD_OBJECTS.quoteLine.fields`
+- `index`: all of `STANDARD_OBJECTS.quote.indexes` and `STANDARD_OBJECTS.quoteLine.indexes` (this already includes the 4 FK indexes added in the fix wave — no separate handling needed, they're just more entries in the same map)
+- `view`: `STANDARD_OBJECTS.quote.views.allQuotes`, `.quoteRecordPageFields`, `STANDARD_OBJECTS.quoteLine.views.allQuoteLines`, `.quoteLineRecordPageFields` (confirm these exact view-key names against `compute-standard-quote-views.util.ts` / `compute-standard-quote-line-views.util.ts` yourself before finalizing — they were correct as of this plan's writing but verify)
+- `viewFieldGroup`: the view field groups under each object's `RecordPageFields` view
+- `viewField`: the view fields under each object's `allX` view AND `RecordPageFields` view
+- `pageLayout`: `STANDARD_PAGE_LAYOUT_UNIVERSAL_IDENTIFIERS.quoteRecordPage`, `.quoteLineRecordPage`
+- `pageLayoutTab`: each one's `.tabs.home`
+- `pageLayoutWidget`: each one's `.tabs.home.widgets.fields`
+- `searchFieldMetadata`: `quote` only — it has a `name` search field (`SEARCH_FIELDS_BY_STANDARD_OBJECT_NAME.quote`); `quoteLine` has none (`SEARCH_FIELDS_BY_STANDARD_OBJECT_NAME.quoteLine` is `[]`, confirm this is still true when you read the file). Derive this the same way the template does (via `SEARCH_FIELDS_BY_STANDARD_OBJECT_NAME`, not hardcoded), but only for `['quote', 'quoteLine']` this time, not 4 object names.
+
+**(b) New fields/indexes bolted onto 5 PRE-EXISTING standard objects** (added by Phase 3's Task 1/Task 2 rulings and the final-review fix wave — these objects themselves already exist in every old workspace, only these specific new pieces are missing):
+- `fieldMetadata`: `STANDARD_OBJECTS.opportunity.fields.quotes`, `STANDARD_OBJECTS.company.fields.quotes`, `STANDARD_OBJECTS.person.fields.quotes`, `STANDARD_OBJECTS.product.fields.quoteLines`, `STANDARD_OBJECTS.attachment.fields.targetQuote` (confirm each field name exists exactly as spelled here in `standard-object-fields.constant.ts` before using it)
+- `index`: `STANDARD_OBJECTS.attachment.indexes.quoteIdIndex` (the index tied to `targetQuote` — confirm this exact key by reading `compute-attachment-standard-flat-index-metadata.util.ts`). Opportunity/Company/Person/Product's new `quotes`/`quoteLines` fields are reverse `ONE_TO_MANY` fields with no FK column on that side, so they do NOT get their own index entries — do not invent one.
+- `viewField`: `STANDARD_OBJECTS.opportunity.views.opportunityRecordPageFields.viewFields.quotes` ONLY (confirm the exact key by reading `standard-object.constant.ts`'s `opportunity` block). Company/Person/Product deliberately have NO view field for their new reverse relation — this was a considered ruling during Phase 3 (UI-clutter reasoning, upheld again during the final-review fix wave when a reviewer questioned it) — do not add one.
+- Do NOT add anything to `objectMetadata`, `view`, `viewFieldGroup`, `pageLayout`, `pageLayoutTab`, `pageLayoutWidget`, or `searchFieldMetadata` for these 5 objects — they already have all of those from before Phase 3, only the specific rows named above are new.
+
+- [ ] **Step 3: Pick the migration path — legacy, not default side-effect**
+
+`packages/twenty-server/docs/UPGRADE_COMMANDS.md`'s stated rule of thumb is ">= 2.19 → use the default side-effect method", and this command targets 2.36.0. Do **NOT** follow that default here. This backfill is the same "already-curated standard state" shape the template's own giant comment (right above its `@RegisteredWorkspaceCommand` decorator) documents as the exception: fresh-workspace provisioning for `quote`/`quoteLine` never goes through the side-effect engine either (`synchronizeTwentyStandardApplicationOrThrow` → `validateBuildAndRunWorkspaceMigrationFromTo`, no `expandWithSideEffects` step), so an upgraded workspace must reach the exact same end state a fresh workspace gets — no more, no less. Using the default side-effect path here would inject engine-owned companions fresh workspaces never receive, and because the standard sync runs with `inferDeletionFromMissingEntities: true`, those extra rows would become silent deletion candidates on the very next sync. Copy the template's reasoning comment forward (adapted to name `quote`/`quoteLine` instead of `costTemplate`/`product`), and call `validateBuildAndRunLegacyWorkspaceMigration`, exactly like the template does.
+
+- [ ] **Step 4: Write the early-return / already-synced check**
+
+The template early-returns when `costTemplate`'s objectMetadata already exists. Mirror this using `quote`'s objectMetadata universal identifier as the equivalent "has this workspace already run Phase 3's backfill" signal (Quote is Phase 3's primary new object, same role costTemplate played for Phase 1). Also keep the template's second guard (skip + log when the computed `totalOperationCount` is `0`, for the case where a workspace has partial state for some other reason) — copy that logic forward unchanged.
+
+- [ ] **Step 5: Write the command name, description, and decorator**
+
+```ts
+@RegisteredWorkspaceCommand('2.36.0', 1788526207023)
+@Command({
+  name: 'upgrade:2-36:sync-quote-quote-line-standard-objects',
+  description:
+    'Create the Quote and QuoteLine standard metadata, and the reverse-relation fields on Opportunity, Company, Person, Product and Attachment, in existing workspaces',
+})
+export class SyncQuoteQuoteLineStandardObjectsCommand extends ProvisionedWorkspaceCommandRunner {
+```
+
+The timestamp `1788526207023` is a real epoch-ms value, confirmed strictly greater than every existing timestamp in the `2-36` directory (current max: `1788362638436`, the template's own). Do not regenerate it — use it verbatim.
+
+- [ ] **Step 6: Implement the command**
+
+Follow the template's `runOnWorkspace` structure exactly: fetch the workspace's current flat entity maps via `workspaceCacheService.getOrRecompute` (same list of map names as the template — objectMetadata/fieldMetadata/index/view/viewField/viewFieldGroup/pageLayout/pageLayoutTab/pageLayoutWidget/searchFieldMetadata), compute `computeTwentyStandardApplicationAllFlatEntityMaps`, build the `allFlatEntityOperationByMetadataName` matrix using `getStandardFlatEntitiesToCreateOrThrow` for each category from Step 2 (every category gets `flatEntityToDelete: []` and `flatEntityToUpdate: []` — this is purely additive, exactly like the template), sum `totalOperationCount`, handle `isDryRun` (log-only, no write), then call `validateBuildAndRunLegacyWorkspaceMigration` and throw on `status === 'fail'`, logging the applied count on success.
+
+- [ ] **Step 7: Register the command in the module**
+
+Add the import and provider entry to `2-36-upgrade-version-command.module.ts`, mirroring exactly how `SyncQuoteCpqStandardObjectsCommand` is already registered there.
+
+- [ ] **Step 8: Write the test spec**
+
+Mirror the template spec's 3-test structure exactly (`packages/twenty-server/src/database/commands/upgrade-version-command/2-36/__tests__/2-36-workspace-command-1788362638436-sync-quote-cpq-standard-objects.command.spec.ts`):
+1. `creates the full Quote/QuoteLine standard metadata set when quote is missing` — asserts the full operation matrix gets built and `validateBuildAndRunLegacyWorkspaceMigration` is called with it.
+2. `is idempotent when the Quote/QuoteLine standard objects already exist` — asserts the early-return fires, no migration call happens.
+3. `does not write metadata in dry-run mode` — asserts logging happens but no migration call.
+
+Adapt the template spec's mocking approach (same `workspaceCacheService.getOrRecompute` / `applicationService` / `workspaceMigrationValidateBuildAndRunService` mock shape) rather than inventing a new one.
+
+- [ ] **Step 9: Run the test suite**
+
+Run this new spec file directly, then the full `2-36` upgrade-command test directory, to confirm nothing else broke.
+
+- [ ] **Step 10: Real dev-DB dry-run verification**
+
+This project has a live dev database (see `CLAUDE.md` — Postgres MCP server, or direct `psql`/dev env). Run the new command's CLI entry point with `--dry-run` against it (check `upgrade.command.ts` / `UPGRADE_COMMANDS.md`'s "Execution Order" section for the exact CLI invocation shape used to run a single workspace command standalone, e.g. via the `upgrade` command's workspace-filter flags, or however the template's own command would have been dry-run tested — if no standalone single-command CLI entry point exists and only the full `upgrade` sequence can be invoked, report this back rather than guessing at a workaround) against the workspace(s) that already exist in the dev database (which ran Phase 1's `costTemplate` backfill already, per `CLAUDE.md`'s dev-environment notes) and confirm the dry-run log reports a nonzero, sane operation count with no errors. Do NOT run it for real (non-dry-run) against the dev database without explicit confirmation from the controller first — this task's automated tests are the primary verification; the dry-run is a real-world sanity check on top, not a live migration.
+
+- [ ] **Step 11: Typecheck and lint**
+
+`npx tsgo -p packages/twenty-server/tsconfig.json --noEmit`; `npx oxlint --type-aware --fix -c .oxlintrc.json <files touched>` then `npx oxfmt <files touched>`.
+
+- [ ] **Step 12: Commit**
+
+```bash
+git commit -m "feat: backfill Quote/QuoteLine standard objects for existing workspaces"
+```
+
+---
 
 ## Out of scope for this plan (deferred)
 
