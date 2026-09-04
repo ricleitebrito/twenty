@@ -721,6 +721,18 @@ quoteLines: createStandardRelationFieldFlatMetadata({
 }),
 ```
 
+- [ ] **Step 9.5: Add the required `quoteLines` reverse field to Product**
+
+**Same class of gap Task 1 hit and fixed for Opportunity/Company/Person — this plan draft repeated the mistake for `Product`, catch it now rather than at implementation time.** `QuoteLine.product` (Step 8, above) is a plain `MANY_TO_ONE` relation with `targetFieldName: 'quoteLines'`, which requires `Product` to already declare a `quoteLines` field — it doesn't, and this task's original file list never included modifying `product.workspace-entity.ts` or `compute-product-standard-flat-field-metadata.util.ts`.
+
+**Ruling (same reasoning as Task 1's Step 6.5):** add `quoteLines` (`ONE_TO_MANY`, `targetObjectName: 'quoteLine'`, `targetFieldName: 'product'`, `isSystemSideEffect: true`, `isUIEditable: false`) to `Product`'s field-metadata builder, using a fresh universal identifier checked for collisions the same way every other identifier in this plan sequence was (or, if you find `Product` already uses `getSystemRelationFieldUniversalIdentifier` for its OTHER reverse relations — check `costTemplate.products`' own identifier derivation in Phase 1's already-committed code first — match whichever approach `Product`'s existing reverse relations actually use, don't introduce a third convention). Do **NOT** add `quoteLines` to `Product`'s existing `productRecordPageFields` view — same conservative reasoning as Company/Person in Step 6.5 (a Product can accumulate many QuoteLines over time; a not-yet-fully-built feature doesn't need a visible section on every Product record yet; the field stays fully queryable regardless).
+
+Files to modify (beyond this task's original list):
+- `packages/twenty-shared/src/metadata/constants/standard-object-fields.constant.ts` — add `quoteLines` to the existing `product` block.
+- `packages/twenty-server/.../field-metadata/compute-product-standard-flat-field-metadata.util.ts` — add the `quoteLines` field, mirroring `product.costTemplate`'s own reverse-relation sibling if one exists, or `Quote.attachments`'s shape (Task 1, already committed) otherwise.
+
+Confirm via the metadata-build test that `Product` still builds correctly and `QuoteLine.product` now resolves without error.
+
 - [ ] **Step 10: Register the field-metadata builder**
 
 - [ ] **Step 11: Register the object-metadata builder**
