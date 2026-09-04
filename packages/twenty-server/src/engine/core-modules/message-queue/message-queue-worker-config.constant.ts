@@ -121,6 +121,15 @@ export const MESSAGE_QUEUE_WORKER_CONFIG: Record<
       boundedShutdownDrain: false,
     },
   },
+  [MessageQueue.quoteQueue]: {
+    priority: 2,
+    workerOptions: {
+      concurrency: 1,
+      lockDuration: 30_000,
+      maxStalledCount: 1,
+      boundedShutdownDrain: false,
+    },
+  },
   [MessageQueue.delayedJobsQueue]: {
     priority: 3,
     workerOptions: {
