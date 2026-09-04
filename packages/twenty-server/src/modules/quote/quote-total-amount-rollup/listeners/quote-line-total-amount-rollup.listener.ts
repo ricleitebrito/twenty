@@ -4,6 +4,8 @@ import { isDefined } from 'twenty-shared/utils';
 import {
   type ObjectRecordCreateEvent,
   type ObjectRecordDeleteEvent,
+  type ObjectRecordDestroyEvent,
+  type ObjectRecordRestoreEvent,
   type ObjectRecordUpdateEvent,
 } from 'twenty-shared/database-events';
 
@@ -80,6 +82,46 @@ export class QuoteLineTotalAmountRollupListener {
   async handleQuoteLineDeleted(
     batchEvent: CustomWorkspaceEventBatch<
       ObjectRecordDeleteEvent<QuoteLineWorkspaceEntity>
+    >,
+  ): Promise<void> {
+    if (!isDefined(batchEvent.workspaceId)) {
+      return;
+    }
+
+    const quoteIds = batchEvent.events
+      .map((event) => event.properties.before.quoteId)
+      .filter(isDefined);
+
+    await this.enqueueRollup({
+      workspaceId: batchEvent.workspaceId,
+      quoteIds,
+    });
+  }
+
+  @OnDatabaseBatchEvent('quoteLine', DatabaseEventAction.RESTORED)
+  async handleQuoteLineRestored(
+    batchEvent: CustomWorkspaceEventBatch<
+      ObjectRecordRestoreEvent<QuoteLineWorkspaceEntity>
+    >,
+  ): Promise<void> {
+    if (!isDefined(batchEvent.workspaceId)) {
+      return;
+    }
+
+    const quoteIds = batchEvent.events
+      .map((event) => event.properties.after.quoteId)
+      .filter(isDefined);
+
+    await this.enqueueRollup({
+      workspaceId: batchEvent.workspaceId,
+      quoteIds,
+    });
+  }
+
+  @OnDatabaseBatchEvent('quoteLine', DatabaseEventAction.DESTROYED)
+  async handleQuoteLineDestroyed(
+    batchEvent: CustomWorkspaceEventBatch<
+      ObjectRecordDestroyEvent<QuoteLineWorkspaceEntity>
     >,
   ): Promise<void> {
     if (!isDefined(batchEvent.workspaceId)) {
