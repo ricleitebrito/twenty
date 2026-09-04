@@ -1415,7 +1415,17 @@ export const STANDARD_OBJECTS = {
   quote: {
     universalIdentifier: STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.quote,
     fields: STANDARD_OBJECT_FIELDS.quote,
-    indexes: {},
+    indexes: {
+      opportunityIdIndex: {
+        universalIdentifier: '295ea4d3-6dfb-4d67-968b-3f1432d75f9c',
+      },
+      companyIdIndex: {
+        universalIdentifier: '4b1a89d6-2a5f-4279-ae18-9cc007115dc7',
+      },
+      personIdIndex: {
+        universalIdentifier: '59cf5e6b-ac0d-4474-97c7-4c1c95c49c76',
+      },
+    },
     views: {
       allQuotes: buildStandardObjectIndexView({
         objectUniversalIdentifier: STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.quote,
@@ -1454,6 +1464,9 @@ export const STANDARD_OBJECTS = {
     indexes: {
       quoteIdIndex: {
         universalIdentifier: '6a965497-00c7-4974-acbd-3ce8da2f8c9c',
+      },
+      productIdIndex: {
+        universalIdentifier: '06479c99-3b18-4345-a07b-25c6e15e0918',
       },
     },
     views: {

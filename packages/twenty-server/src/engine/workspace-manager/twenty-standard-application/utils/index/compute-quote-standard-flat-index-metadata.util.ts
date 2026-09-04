@@ -5,35 +5,47 @@ import {
   createStandardIndexFlatMetadata,
 } from 'src/engine/workspace-manager/twenty-standard-application/utils/index/create-standard-index-flat-metadata.util';
 
-export const buildQuoteLineStandardFlatIndexMetadatas = ({
+export const buildQuoteStandardFlatIndexMetadatas = ({
   now,
   objectName,
   workspaceId,
   standardObjectMetadataRelatedEntityIds,
   dependencyFlatEntityMaps,
   twentyStandardApplicationId,
-}: Omit<CreateStandardIndexArgs<'quoteLine'>, 'context'>): Record<
-  AllStandardObjectIndexName<'quoteLine'>,
+}: Omit<CreateStandardIndexArgs<'quote'>, 'context'>): Record<
+  AllStandardObjectIndexName<'quote'>,
   FlatIndexMetadata
 > => ({
-  quoteIdIndex: createStandardIndexFlatMetadata({
+  opportunityIdIndex: createStandardIndexFlatMetadata({
     objectName,
     workspaceId,
     context: {
-      indexName: 'quoteIdIndex',
-      relatedFieldNames: ['quote'],
+      indexName: 'opportunityIdIndex',
+      relatedFieldNames: ['opportunity'],
     },
     standardObjectMetadataRelatedEntityIds,
     dependencyFlatEntityMaps,
     twentyStandardApplicationId,
     now,
   }),
-  productIdIndex: createStandardIndexFlatMetadata({
+  companyIdIndex: createStandardIndexFlatMetadata({
     objectName,
     workspaceId,
     context: {
-      indexName: 'productIdIndex',
-      relatedFieldNames: ['product'],
+      indexName: 'companyIdIndex',
+      relatedFieldNames: ['company'],
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+  personIdIndex: createStandardIndexFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      indexName: 'personIdIndex',
+      relatedFieldNames: ['person'],
     },
     standardObjectMetadataRelatedEntityIds,
     dependencyFlatEntityMaps,
