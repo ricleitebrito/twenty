@@ -48,6 +48,9 @@ export const STANDARD_OBJECTS = {
       workflowIdIndex: {
         universalIdentifier: 'fadeab4b-79ee-4173-af79-72c51fbad888',
       },
+      quoteIdIndex: {
+        universalIdentifier: '76131f87-17ce-47e6-a6ec-406b07daf86e',
+      },
     },
     views: {
       allAttachments: buildStandardObjectIndexView({
@@ -66,6 +69,7 @@ export const STANDARD_OBJECTS = {
           'targetNote',
           'targetDashboard',
           'targetWorkflow',
+          'targetQuote',
         ],
       }),
     },
@@ -793,6 +797,7 @@ export const STANDARD_OBJECTS = {
           'taskTargets',
           'noteTargets',
           'attachments',
+          'quotes',
           'timelineActivities',
         ],
         viewFieldGroupNames: {
@@ -1395,6 +1400,41 @@ export const STANDARD_OBJECTS = {
           'basePrice',
           'isActive',
           'costTemplate',
+          'createdAt',
+          'createdBy',
+          'updatedAt',
+          'updatedBy',
+        ],
+        viewFieldGroupNames: {
+          general: 'General',
+          system: 'System',
+        },
+      }),
+    },
+  },
+  quote: {
+    universalIdentifier: STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.quote,
+    fields: STANDARD_OBJECT_FIELDS.quote,
+    indexes: {},
+    views: {
+      allQuotes: buildStandardObjectIndexView({
+        objectUniversalIdentifier: STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.quote,
+        fields: STANDARD_OBJECT_FIELDS.quote,
+        viewFieldNames: ['name', 'status', 'opportunity', 'totalAmount'],
+      }),
+      quoteRecordPageFields: buildStandardObjectRecordPageFieldsView({
+        objectUniversalIdentifier: STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.quote,
+        fields: STANDARD_OBJECT_FIELDS.quote,
+        viewFieldNames: [
+          // name is excluded here, matching company/opportunity/person/note/task —
+          // it already renders in the record page header.
+          'status',
+          'opportunity',
+          'company',
+          'person',
+          'validUntil',
+          'totalAmount',
+          'attachments',
           'createdAt',
           'createdBy',
           'updatedAt',

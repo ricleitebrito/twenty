@@ -26,6 +26,7 @@ export const STANDARD_OBJECT_ICONS = {
   opportunity: 'IconTargetArrow',
   person: 'IconUser',
   product: 'IconPackage',
+  quote: 'IconFileText',
   task: 'IconCheckbox',
   taskTarget: 'IconCheckbox',
   timelineActivity: 'IconTimelineEvent',

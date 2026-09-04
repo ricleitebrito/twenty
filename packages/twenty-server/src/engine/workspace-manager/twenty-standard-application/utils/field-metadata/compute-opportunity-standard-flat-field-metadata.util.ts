@@ -570,6 +570,37 @@ export const buildOpportunityStandardFlatFieldMetadatas = ({
     twentyStandardApplicationId,
     now,
   }),
+  quotes: createStandardRelationFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      type: FieldMetadataType.RELATION,
+      morphId: null,
+      fieldName: 'quotes',
+      isSystemSideEffect: true,
+      label: i18nLabel(
+        msg({ message: `Quotes`, context: 'fieldMetadata.label' }),
+      ),
+      description: i18nLabel(
+        msg({
+          message: `Quotes linked to the opportunity`,
+          context: 'fieldMetadata.description',
+        }),
+      ),
+      icon: 'IconFileText',
+      isNullable: true,
+      isUIEditable: false,
+      targetObjectName: 'quote',
+      targetFieldName: 'opportunity',
+      settings: {
+        relationType: RelationType.ONE_TO_MANY,
+      },
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
   owner: createStandardRelationFieldFlatMetadata({
     objectName,
     workspaceId,

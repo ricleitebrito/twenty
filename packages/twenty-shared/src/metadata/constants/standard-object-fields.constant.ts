@@ -241,6 +241,7 @@ export const STANDARD_OBJECT_FIELDS = {
           STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.workflow,
       }),
     },
+    targetQuote: { universalIdentifier: '33b24536-8aaf-4535-907d-1adfe0d7fd11' },
   },
   blocklist: {
     ...buildStandardObjectSystemFields(
@@ -444,6 +445,15 @@ export const STANDARD_OBJECT_FIELDS = {
           STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.company,
         relationTargetObjectUniversalIdentifier:
           STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.timelineActivity,
+      }),
+    },
+    quotes: {
+      universalIdentifier: getSystemRelationFieldUniversalIdentifier({
+        applicationUniversalIdentifier:
+          TWENTY_STANDARD_APPLICATION_UNIVERSAL_IDENTIFIER,
+        objectUniversalIdentifier: STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.company,
+        relationTargetObjectUniversalIdentifier:
+          STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.quote,
       }),
     },
   },
@@ -779,6 +789,16 @@ export const STANDARD_OBJECT_FIELDS = {
           STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.timelineActivity,
       }),
     },
+    quotes: {
+      universalIdentifier: getSystemRelationFieldUniversalIdentifier({
+        applicationUniversalIdentifier:
+          TWENTY_STANDARD_APPLICATION_UNIVERSAL_IDENTIFIER,
+        objectUniversalIdentifier:
+          STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.opportunity,
+        relationTargetObjectUniversalIdentifier:
+          STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.quote,
+      }),
+    },
   },
   person: {
     ...buildStandardObjectSystemFields(
@@ -845,6 +865,15 @@ export const STANDARD_OBJECT_FIELDS = {
     },
     listMemberships: {
       universalIdentifier: '8b8d1be0-4c94-4413-a2c9-c7ede205a81d',
+    },
+    quotes: {
+      universalIdentifier: getSystemRelationFieldUniversalIdentifier({
+        applicationUniversalIdentifier:
+          TWENTY_STANDARD_APPLICATION_UNIVERSAL_IDENTIFIER,
+        objectUniversalIdentifier: STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.person,
+        relationTargetObjectUniversalIdentifier:
+          STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.quote,
+      }),
     },
   },
   task: {
@@ -1171,6 +1200,25 @@ export const STANDARD_OBJECT_FIELDS = {
     },
     costTemplate: {
       universalIdentifier: '795d115f-824e-4f30-af84-9dd41021a7cc',
+    },
+  },
+  quote: {
+    ...buildStandardObjectSystemFields(STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.quote),
+    name: { universalIdentifier: 'a1e89815-852d-4916-a32b-00c053af7649' },
+    status: { universalIdentifier: '445c5d19-c4c3-411d-b81d-060720ca1a41' },
+    opportunity: {
+      universalIdentifier: '6c75a0f8-b21f-44bd-9d05-3b28ce6e6e1e',
+    },
+    company: { universalIdentifier: '7f98389f-3a5e-44e5-a47c-a49e1a557abc' },
+    person: { universalIdentifier: 'cc5f2f88-921f-4dd4-99c8-3e624e8651cd' },
+    validUntil: {
+      universalIdentifier: '941db528-3e40-481b-8f1d-e10881aa1d7a',
+    },
+    totalAmount: {
+      universalIdentifier: 'f1da9b3c-751d-4b7e-aecc-acfdff8dac03',
+    },
+    attachments: {
+      universalIdentifier: 'b95ec13f-5cc5-4d80-8a36-e72ca09f9172',
     },
   },
 } satisfies Record<string, Record<string, { universalIdentifier: string }>>;

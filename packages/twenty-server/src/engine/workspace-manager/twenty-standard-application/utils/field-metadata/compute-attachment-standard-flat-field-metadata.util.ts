@@ -584,6 +584,39 @@ export const buildAttachmentStandardFlatFieldMetadatas = ({
     twentyStandardApplicationId,
     now,
   }),
+  targetQuote: createStandardRelationFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      type: FieldMetadataType.MORPH_RELATION,
+      morphId: STANDARD_OBJECTS.attachment.morphIds.targetMorphId.morphId,
+      fieldName: 'targetQuote',
+      label: i18nLabel(
+        msg({ message: `Quote`, context: 'fieldMetadata.label' }),
+      ),
+      description: i18nLabel(
+        msg({
+          message: `Attachment target`,
+          context: 'fieldMetadata.description',
+        }),
+      ),
+      icon: 'IconFileImport',
+      isNullable: true,
+      isUIEditable: false,
+      isSystemSideEffect: true,
+      targetObjectName: 'quote',
+      targetFieldName: 'attachments',
+      settings: {
+        relationType: RelationType.MANY_TO_ONE,
+        onDelete: RelationOnDeleteAction.CASCADE,
+        joinColumnName: 'targetQuoteId',
+      },
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
   targetDashboard: createStandardRelationFieldFlatMetadata({
     objectName,
     workspaceId,

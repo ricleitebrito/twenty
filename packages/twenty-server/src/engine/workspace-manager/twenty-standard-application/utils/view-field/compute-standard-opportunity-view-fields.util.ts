@@ -244,6 +244,19 @@ export const computeStandardOpportunityViewFields = (
         },
       },
     ),
+    opportunityRecordPageFieldsQuotes: createStandardViewFieldFlatMetadata({
+      ...args,
+      objectName: 'opportunity',
+      context: {
+        viewName: 'opportunityRecordPageFields',
+        viewFieldName: 'quotes',
+        fieldName: 'quotes',
+        position: 7,
+        isVisible: false,
+        size: 150,
+        viewFieldGroupName: 'deal',
+      },
+    }),
     opportunityRecordPageFieldsTimelineActivities:
       createStandardViewFieldFlatMetadata({
         ...args,
@@ -252,7 +265,7 @@ export const computeStandardOpportunityViewFields = (
           viewName: 'opportunityRecordPageFields',
           viewFieldName: 'timelineActivities',
           fieldName: 'timelineActivities',
-          position: 7,
+          position: 8,
           isVisible: false,
           size: 150,
           viewFieldGroupName: 'deal',

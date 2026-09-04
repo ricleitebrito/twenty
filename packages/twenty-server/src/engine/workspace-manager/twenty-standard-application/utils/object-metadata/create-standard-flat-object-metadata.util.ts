@@ -1018,6 +1018,41 @@ export const STANDARD_FLAT_OBJECT_METADATA_BUILDERS_BY_OBJECT_NAME = {
       twentyStandardApplicationId,
       now,
     }),
+  quote: ({
+    now,
+    workspaceId,
+    standardObjectMetadataRelatedEntityIds,
+    twentyStandardApplicationId,
+    dependencyFlatEntityMaps,
+  }: Omit<CreateStandardObjectArgs<'quote'>, 'context' | 'objectName'>) =>
+    createStandardObjectFlatMetadata({
+      objectName: 'quote',
+      dependencyFlatEntityMaps,
+      context: {
+        universalIdentifier: STANDARD_OBJECTS.quote.universalIdentifier,
+        nameSingular: 'quote',
+        namePlural: 'quotes',
+        labelSingular: i18nLabel(
+          msg({ message: `Quote`, context: 'objectMetadata.labelSingular' }),
+        ),
+        labelPlural: i18nLabel(
+          msg({ message: `Quotes`, context: 'objectMetadata.labelPlural' }),
+        ),
+        description: i18nLabel(
+          msg({
+            message: `A price quote sent to a prospect`,
+            context: 'objectMetadata.description',
+          }),
+        ),
+        icon: 'IconFileText',
+        isSearchable: true,
+        labelIdentifierFieldMetadataName: 'name',
+      },
+      workspaceId,
+      standardObjectMetadataRelatedEntityIds,
+      twentyStandardApplicationId,
+      now,
+    }),
   task: ({
     now,
     workspaceId,
