@@ -16,7 +16,7 @@ import {
 } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/create-standard-field-flat-metadata.util';
 import { createStandardRelationFieldFlatMetadata } from 'src/engine/workspace-manager/twenty-standard-application/utils/field-metadata/create-standard-relation-field-flat-metadata.util';
 
-export const buildProductStandardFlatFieldMetadatas = ({
+export const buildQuoteLineStandardFlatFieldMetadatas = ({
   now,
   objectName,
   workspaceId,
@@ -24,9 +24,9 @@ export const buildProductStandardFlatFieldMetadatas = ({
   dependencyFlatEntityMaps,
   twentyStandardApplicationId,
 }: Omit<
-  CreateStandardFieldArgs<'product', FieldMetadataType>,
+  CreateStandardFieldArgs<'quoteLine', FieldMetadataType>,
   'context'
->): Record<AllStandardObjectFieldName<'product'>, FlatFieldMetadata> => ({
+>): Record<AllStandardObjectFieldName<'quoteLine'>, FlatFieldMetadata> => ({
   id: createStandardFieldFlatMetadata({
     objectName,
     workspaceId,
@@ -136,7 +136,7 @@ export const buildProductStandardFlatFieldMetadatas = ({
       ),
       description: i18nLabel(
         msg({
-          message: `Product record position`,
+          message: `Quote line record position`,
           context: 'fieldMetadata.description',
         }),
       ),
@@ -225,7 +225,7 @@ export const buildProductStandardFlatFieldMetadatas = ({
           context: 'fieldMetadata.description',
         }),
       ),
-      icon: 'IconPackage',
+      icon: 'IconReceipt2',
       isSystem: true,
       isNullable: true,
     },
@@ -234,66 +234,131 @@ export const buildProductStandardFlatFieldMetadatas = ({
     twentyStandardApplicationId,
     now,
   }),
-  name: createStandardFieldFlatMetadata({
+  quote: createStandardRelationFieldFlatMetadata({
     objectName,
     workspaceId,
     context: {
-      fieldName: 'name',
-      type: FieldMetadataType.TEXT,
+      type: FieldMetadataType.RELATION,
+      morphId: null,
+      fieldName: 'quote',
       label: i18nLabel(
-        msg({ message: `Name`, context: 'fieldMetadata.label' }),
+        msg({ message: `Quote`, context: 'fieldMetadata.label' }),
       ),
       description: i18nLabel(
         msg({
-          message: `The product name`,
+          message: `QuoteLine quote`,
           context: 'fieldMetadata.description',
         }),
       ),
-      icon: 'IconTag',
-      isNullable: true,
+      icon: 'IconFileText',
+      isNullable: false,
+      isUIEditable: false,
+      targetObjectName: 'quote',
+      targetFieldName: 'quoteLines',
+      settings: {
+        relationType: RelationType.MANY_TO_ONE,
+        onDelete: RelationOnDeleteAction.CASCADE,
+        joinColumnName: 'quoteId',
+      },
     },
     standardObjectMetadataRelatedEntityIds,
     dependencyFlatEntityMaps,
     twentyStandardApplicationId,
     now,
   }),
-  sku: createStandardFieldFlatMetadata({
+  product: createStandardRelationFieldFlatMetadata({
     objectName,
     workspaceId,
     context: {
-      fieldName: 'sku',
-      type: FieldMetadataType.TEXT,
-      label: i18nLabel(msg({ message: `SKU`, context: 'fieldMetadata.label' })),
-      description: i18nLabel(
-        msg({
-          message: `The product's stock keeping unit`,
-          context: 'fieldMetadata.description',
-        }),
-      ),
-      icon: 'IconBarcode',
-      isNullable: true,
-    },
-    standardObjectMetadataRelatedEntityIds,
-    dependencyFlatEntityMaps,
-    twentyStandardApplicationId,
-    now,
-  }),
-  description: createStandardFieldFlatMetadata({
-    objectName,
-    workspaceId,
-    context: {
-      fieldName: 'description',
-      type: FieldMetadataType.TEXT,
+      type: FieldMetadataType.RELATION,
+      morphId: null,
+      fieldName: 'product',
       label: i18nLabel(
-        msg({ message: `Description`, context: 'fieldMetadata.label' }),
+        msg({ message: `Product`, context: 'fieldMetadata.label' }),
       ),
       description: i18nLabel(
         msg({
-          message: `The product description`,
+          message: `QuoteLine product`,
           context: 'fieldMetadata.description',
         }),
       ),
-      icon: 'IconFileDescription',
+      icon: 'IconPackage',
+      isNullable: false,
+      isUIEditable: true,
+      targetObjectName: 'product',
+      targetFieldName: 'quoteLines',
+      settings: {
+        relationType: RelationType.MANY_TO_ONE,
+        onDelete: RelationOnDeleteAction.RESTRICT,
+        joinColumnName: 'productId',
+      },
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+  quantity: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'quantity',
+      type: FieldMetadataType.NUMBER,
+      label: i18nLabel(
+        msg({ message: `Quantity`, context: 'fieldMetadata.label' }),
+      ),
+      description: i18nLabel(
+        msg({ message: `Quantity`, context: 'fieldMetadata.description' }),
+      ),
+      icon: 'IconHash',
+      isNullable: false,
+      defaultValue: 1,
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+  discountPercent: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'discountPercent',
+      type: FieldMetadataType.NUMBER,
+      label: i18nLabel(
+        msg({ message: `Discount Percent`, context: 'fieldMetadata.label' }),
+      ),
+      description: i18nLabel(
+        msg({
+          message: `Discount percentage applied to this line`,
+          context: 'fieldMetadata.description',
+        }),
+      ),
+      icon: 'IconDiscount2',
+      isNullable: true,
+      defaultValue: 0,
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
+  fieldValues: createStandardFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      fieldName: 'fieldValues',
+      type: FieldMetadataType.RAW_JSON,
+      label: i18nLabel(
+        msg({ message: `Field Values`, context: 'fieldMetadata.label' }),
+      ),
+      description: i18nLabel(
+        msg({
+          message: `Values for the product's cost template fields`,
+          context: 'fieldMetadata.description',
+        }),
+      ),
+      icon: 'IconForms',
       isNullable: true,
     },
     standardObjectMetadataRelatedEntityIds,
@@ -301,109 +366,48 @@ export const buildProductStandardFlatFieldMetadatas = ({
     twentyStandardApplicationId,
     now,
   }),
-  basePrice: createStandardFieldFlatMetadata({
+  unitPrice: createStandardFieldFlatMetadata({
     objectName,
     workspaceId,
     context: {
-      fieldName: 'basePrice',
+      fieldName: 'unitPrice',
       type: FieldMetadataType.CURRENCY,
       label: i18nLabel(
-        msg({ message: `Base Price`, context: 'fieldMetadata.label' }),
+        msg({ message: `Unit Price`, context: 'fieldMetadata.label' }),
       ),
       description: i18nLabel(
         msg({
-          message: `The product's list price`,
+          message: `Computed from the product's cost template, or entered manually if it has none`,
           context: 'fieldMetadata.description',
         }),
       ),
       icon: 'IconCurrencyDollar',
       isNullable: true,
+      isUIEditable: true,
     },
     standardObjectMetadataRelatedEntityIds,
     dependencyFlatEntityMaps,
     twentyStandardApplicationId,
     now,
   }),
-  isActive: createStandardFieldFlatMetadata({
+  totalPrice: createStandardFieldFlatMetadata({
     objectName,
     workspaceId,
     context: {
-      fieldName: 'isActive',
-      type: FieldMetadataType.BOOLEAN,
+      fieldName: 'totalPrice',
+      type: FieldMetadataType.CURRENCY,
       label: i18nLabel(
-        msg({ message: `Is Active`, context: 'fieldMetadata.label' }),
+        msg({ message: `Total Price`, context: 'fieldMetadata.label' }),
       ),
       description: i18nLabel(
         msg({
-          message: `Whether this product can be added to new quote lines`,
+          message: `unitPrice * quantity * (1 - discountPercent / 100)`,
           context: 'fieldMetadata.description',
         }),
       ),
-      icon: 'IconCircleCheck',
-      isNullable: false,
-      defaultValue: true,
-    },
-    standardObjectMetadataRelatedEntityIds,
-    dependencyFlatEntityMaps,
-    twentyStandardApplicationId,
-    now,
-  }),
-  costTemplate: createStandardRelationFieldFlatMetadata({
-    objectName,
-    workspaceId,
-    context: {
-      type: FieldMetadataType.RELATION,
-      morphId: null,
-      fieldName: 'costTemplate',
-      label: i18nLabel(
-        msg({ message: `Cost Template`, context: 'fieldMetadata.label' }),
-      ),
-      description: i18nLabel(
-        msg({
-          message: `The cost template used to price quote lines for this product. Leave empty to price this product manually.`,
-          context: 'fieldMetadata.description',
-        }),
-      ),
-      icon: 'IconCalculator',
+      icon: 'IconCurrencyDollar',
       isNullable: true,
-      targetObjectName: 'costTemplate',
-      targetFieldName: 'products',
-      settings: {
-        relationType: RelationType.MANY_TO_ONE,
-        onDelete: RelationOnDeleteAction.SET_NULL,
-        joinColumnName: 'costTemplateId',
-      },
-    },
-    standardObjectMetadataRelatedEntityIds,
-    dependencyFlatEntityMaps,
-    twentyStandardApplicationId,
-    now,
-  }),
-  quoteLines: createStandardRelationFieldFlatMetadata({
-    objectName,
-    workspaceId,
-    context: {
-      type: FieldMetadataType.RELATION,
-      morphId: null,
-      fieldName: 'quoteLines',
-      label: i18nLabel(
-        msg({ message: `Quote Lines`, context: 'fieldMetadata.label' }),
-      ),
-      description: i18nLabel(
-        msg({
-          message: `Quote lines referencing this product`,
-          context: 'fieldMetadata.description',
-        }),
-      ),
-      icon: 'IconReceipt2',
-      isNullable: false,
       isUIEditable: false,
-      isSystemSideEffect: true,
-      targetObjectName: 'quoteLine',
-      targetFieldName: 'product',
-      settings: {
-        relationType: RelationType.ONE_TO_MANY,
-      },
     },
     standardObjectMetadataRelatedEntityIds,
     dependencyFlatEntityMaps,

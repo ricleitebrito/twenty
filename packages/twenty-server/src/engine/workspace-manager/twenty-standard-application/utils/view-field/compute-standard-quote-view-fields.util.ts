@@ -150,6 +150,19 @@ export const computeStandardQuoteViewFields = (
         viewFieldGroupName: 'general',
       },
     }),
+    quoteRecordPageFieldsQuoteLines: createStandardViewFieldFlatMetadata({
+      ...args,
+      objectName: 'quote',
+      context: {
+        viewName: 'quoteRecordPageFields',
+        viewFieldName: 'quoteLines',
+        fieldName: 'quoteLines',
+        position: 7,
+        isVisible: false,
+        size: 150,
+        viewFieldGroupName: 'general',
+      },
+    }),
     // System group
     quoteRecordPageFieldsCreatedAt: createStandardViewFieldFlatMetadata({
       ...args,

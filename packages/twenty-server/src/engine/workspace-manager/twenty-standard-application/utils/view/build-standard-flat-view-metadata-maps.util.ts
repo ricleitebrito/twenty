@@ -26,6 +26,7 @@ import { computeStandardNoteViews } from 'src/engine/workspace-manager/twenty-st
 import { computeStandardOpportunityViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-opportunity-views.util';
 import { computeStandardPersonViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-person-views.util';
 import { computeStandardProductViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-product-views.util';
+import { computeStandardQuoteLineViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-quote-line-views.util';
 import { computeStandardQuoteViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-quote-views.util';
 import { computeStandardTaskTargetViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-task-target-views.util';
 import { computeStandardTaskViews } from 'src/engine/workspace-manager/twenty-standard-application/utils/view/compute-standard-task-views.util';
@@ -69,6 +70,7 @@ const STANDARD_FLAT_VIEW_METADATA_BUILDERS_BY_OBJECT_NAME = {
   person: computeStandardPersonViews,
   product: computeStandardProductViews,
   quote: computeStandardQuoteViews,
+  quoteLine: computeStandardQuoteLineViews,
   task: computeStandardTaskViews,
   taskTarget: computeStandardTaskTargetViews,
   timelineActivity: computeStandardTimelineActivityViews,

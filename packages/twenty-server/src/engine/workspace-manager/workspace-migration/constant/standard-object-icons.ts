@@ -27,6 +27,7 @@ export const STANDARD_OBJECT_ICONS = {
   person: 'IconUser',
   product: 'IconPackage',
   quote: 'IconFileText',
+  quoteLine: 'IconReceipt2',
   task: 'IconCheckbox',
   taskTarget: 'IconCheckbox',
   timelineActivity: 'IconTimelineEvent',

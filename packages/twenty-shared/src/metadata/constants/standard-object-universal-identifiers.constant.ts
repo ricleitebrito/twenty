@@ -39,6 +39,7 @@ export const STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS = {
   costTemplateStep: '69c4f626-ec37-4dcf-84e1-59c173a75acf',
   product: '5f191ed3-6336-43b0-b10c-f5c9f2800c89',
   quote: '52d45abe-28c4-4b82-bb5c-6ce738ab2395',
+  quoteLine: 'e72c4a66-ee2a-4215-b817-90caff3b26f3',
 } as const;
 
 export type StandardObjectWithUniversalIdentifierName =

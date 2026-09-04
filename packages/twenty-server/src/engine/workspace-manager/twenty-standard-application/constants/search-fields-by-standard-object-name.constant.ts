@@ -50,6 +50,7 @@ export const SEARCH_FIELDS_BY_STANDARD_OBJECT_NAME = {
     { name: 'sku', type: FieldMetadataType.TEXT },
   ],
   quote: [{ name: 'name', type: FieldMetadataType.TEXT }],
+  quoteLine: [],
   task: [
     { name: 'title', type: FieldMetadataType.TEXT },
     { name: 'bodyV2', type: FieldMetadataType.RICH_TEXT },

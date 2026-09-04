@@ -241,7 +241,9 @@ export const STANDARD_OBJECT_FIELDS = {
           STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.workflow,
       }),
     },
-    targetQuote: { universalIdentifier: '33b24536-8aaf-4535-907d-1adfe0d7fd11' },
+    targetQuote: {
+      universalIdentifier: '33b24536-8aaf-4535-907d-1adfe0d7fd11',
+    },
   },
   blocklist: {
     ...buildStandardObjectSystemFields(
@@ -451,7 +453,8 @@ export const STANDARD_OBJECT_FIELDS = {
       universalIdentifier: getSystemRelationFieldUniversalIdentifier({
         applicationUniversalIdentifier:
           TWENTY_STANDARD_APPLICATION_UNIVERSAL_IDENTIFIER,
-        objectUniversalIdentifier: STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.company,
+        objectUniversalIdentifier:
+          STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.company,
         relationTargetObjectUniversalIdentifier:
           STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.quote,
       }),
@@ -1201,9 +1204,14 @@ export const STANDARD_OBJECT_FIELDS = {
     costTemplate: {
       universalIdentifier: '795d115f-824e-4f30-af84-9dd41021a7cc',
     },
+    quoteLines: {
+      universalIdentifier: 'fe2e8aa9-46e3-466e-a0b9-6ebb865d8565',
+    },
   },
   quote: {
-    ...buildStandardObjectSystemFields(STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.quote),
+    ...buildStandardObjectSystemFields(
+      STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.quote,
+    ),
     name: { universalIdentifier: 'a1e89815-852d-4916-a32b-00c053af7649' },
     status: { universalIdentifier: '445c5d19-c4c3-411d-b81d-060720ca1a41' },
     opportunity: {
@@ -1219,6 +1227,27 @@ export const STANDARD_OBJECT_FIELDS = {
     },
     attachments: {
       universalIdentifier: 'b95ec13f-5cc5-4d80-8a36-e72ca09f9172',
+    },
+    quoteLines: {
+      universalIdentifier: 'd82bc675-37b5-498b-a2c9-0ceb5d7332e6',
+    },
+  },
+  quoteLine: {
+    ...buildStandardObjectSystemFields(
+      STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.quoteLine,
+    ),
+    quote: { universalIdentifier: '0798bff0-2e84-468d-a0a1-b20f80f755b7' },
+    product: { universalIdentifier: '590b4fcd-3258-40ae-8a2a-b84a11c66546' },
+    quantity: { universalIdentifier: '682e6d0c-c906-470d-975b-f75f9ae848a3' },
+    discountPercent: {
+      universalIdentifier: '0c8991e6-2ace-430e-bcca-d26b17082520',
+    },
+    fieldValues: {
+      universalIdentifier: '288f43a4-bbab-4d40-9a50-bcbb158afeb4',
+    },
+    unitPrice: { universalIdentifier: 'd8887c62-c9d5-41fd-8c27-583ae916464f' },
+    totalPrice: {
+      universalIdentifier: '943d59fa-b304-4641-8487-abd87278c642',
     },
   },
 } satisfies Record<string, Record<string, { universalIdentifier: string }>>;

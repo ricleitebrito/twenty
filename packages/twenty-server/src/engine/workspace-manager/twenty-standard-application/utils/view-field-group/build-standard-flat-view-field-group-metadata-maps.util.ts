@@ -20,6 +20,7 @@ import { computeStandardNoteViewFieldGroups } from 'src/engine/workspace-manager
 import { computeStandardOpportunityViewFieldGroups } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field-group/compute-standard-opportunity-view-field-groups.util';
 import { computeStandardPersonViewFieldGroups } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field-group/compute-standard-person-view-field-groups.util';
 import { computeStandardProductViewFieldGroups } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field-group/compute-standard-product-view-field-groups.util';
+import { computeStandardQuoteLineViewFieldGroups } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field-group/compute-standard-quote-line-view-field-groups.util';
 import { computeStandardQuoteViewFieldGroups } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field-group/compute-standard-quote-view-field-groups.util';
 import { computeStandardTaskViewFieldGroups } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field-group/compute-standard-task-view-field-groups.util';
 import { computeStandardWorkflowAutomatedTriggerViewFieldGroups } from 'src/engine/workspace-manager/twenty-standard-application/utils/view-field-group/compute-standard-workflow-automated-trigger-view-field-groups.util';
@@ -54,6 +55,7 @@ const STANDARD_FLAT_VIEW_FIELD_GROUP_METADATA_BUILDERS_BY_OBJECT_NAME = {
   person: computeStandardPersonViewFieldGroups,
   product: computeStandardProductViewFieldGroups,
   quote: computeStandardQuoteViewFieldGroups,
+  quoteLine: computeStandardQuoteLineViewFieldGroups,
   task: computeStandardTaskViewFieldGroups,
   workflowAutomatedTrigger:
     computeStandardWorkflowAutomatedTriggerViewFieldGroups,

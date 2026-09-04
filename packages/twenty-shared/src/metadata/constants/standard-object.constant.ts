@@ -1435,6 +1435,52 @@ export const STANDARD_OBJECTS = {
           'validUntil',
           'totalAmount',
           'attachments',
+          'quoteLines',
+          'createdAt',
+          'createdBy',
+          'updatedAt',
+          'updatedBy',
+        ],
+        viewFieldGroupNames: {
+          general: 'General',
+          system: 'System',
+        },
+      }),
+    },
+  },
+  quoteLine: {
+    universalIdentifier: STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.quoteLine,
+    fields: STANDARD_OBJECT_FIELDS.quoteLine,
+    indexes: {
+      quoteIdIndex: {
+        universalIdentifier: '6a965497-00c7-4974-acbd-3ce8da2f8c9c',
+      },
+    },
+    views: {
+      allQuoteLines: buildStandardObjectIndexView({
+        objectUniversalIdentifier:
+          STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.quoteLine,
+        fields: STANDARD_OBJECT_FIELDS.quoteLine,
+        viewFieldNames: [
+          'quote',
+          'product',
+          'quantity',
+          'unitPrice',
+          'totalPrice',
+        ],
+      }),
+      quoteLineRecordPageFields: buildStandardObjectRecordPageFieldsView({
+        objectUniversalIdentifier:
+          STANDARD_OBJECT_UNIVERSAL_IDENTIFIERS.quoteLine,
+        fields: STANDARD_OBJECT_FIELDS.quoteLine,
+        viewFieldNames: [
+          'quote',
+          'product',
+          'quantity',
+          'discountPercent',
+          'fieldValues',
+          'unitPrice',
+          'totalPrice',
           'createdAt',
           'createdBy',
           'updatedAt',

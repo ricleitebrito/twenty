@@ -24,7 +24,7 @@ describe('Quote standard metadata build', () => {
     ).toBeDefined();
   });
 
-  it('builds the quote object with all 8 custom fields and 8 system fields', () => {
+  it('builds the quote object with all 9 custom fields and 8 system fields', () => {
     const quoteObject =
       allFlatEntityMaps.flatObjectMetadataMaps.byUniversalIdentifier[
         STANDARD_OBJECTS.quote.universalIdentifier
@@ -37,7 +37,7 @@ describe('Quote standard metadata build', () => {
       .filter((field) => field.objectMetadataId === quoteObject?.id)
       .map((field) => field.name);
 
-    expect(fieldsOnQuote).toHaveLength(16);
+    expect(fieldsOnQuote).toHaveLength(17);
     expect(fieldsOnQuote).toEqual(
       expect.arrayContaining([
         'id',
@@ -56,6 +56,7 @@ describe('Quote standard metadata build', () => {
         'validUntil',
         'totalAmount',
         'attachments',
+        'quoteLines',
       ]),
     );
   });
@@ -103,7 +104,7 @@ describe('Quote standard metadata build', () => {
             .universalIdentifier,
       );
 
-    expect(quoteRecordPageFieldsViewFieldUniversalIdentifiers).toHaveLength(11);
+    expect(quoteRecordPageFieldsViewFieldUniversalIdentifiers).toHaveLength(12);
   });
 
   // Regression: guards against a declared-but-never-built view field (Phase 1's I3 class of bug).

@@ -6,6 +6,7 @@ import { type AttachmentWorkspaceEntity } from 'src/modules/attachment/standard-
 import { type CompanyWorkspaceEntity } from 'src/modules/company/standard-objects/company.workspace-entity';
 import { type OpportunityWorkspaceEntity } from 'src/modules/opportunity/standard-objects/opportunity.workspace-entity';
 import { type PersonWorkspaceEntity } from 'src/modules/person/standard-objects/person.workspace-entity';
+import { type QuoteLineWorkspaceEntity } from 'src/modules/quote/standard-objects/quote-line.workspace-entity';
 
 export type QuoteStatus =
   | 'DRAFT'
@@ -28,6 +29,7 @@ export class QuoteWorkspaceEntity extends BaseWorkspaceEntity {
   validUntil: string | null;
   totalAmount: CurrencyMetadata | null;
   attachments: EntityRelation<AttachmentWorkspaceEntity[]>;
+  quoteLines: EntityRelation<QuoteLineWorkspaceEntity[]>;
   createdBy: ActorMetadata;
   updatedBy: ActorMetadata;
   searchVector: string;

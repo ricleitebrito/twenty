@@ -98,6 +98,7 @@ const RECORD_PAGE_FIELDS_VIEW_NAME_BY_OBJECT: Partial<
   person: 'personRecordPageFields',
   product: 'productRecordPageFields',
   quote: 'quoteRecordPageFields',
+  quoteLine: 'quoteLineRecordPageFields',
   task: 'taskRecordPageFields',
   workflowAutomatedTrigger: 'workflowAutomatedTriggerRecordPageFields',
   workflowRun: 'workflowRunRecordPageFields',

@@ -509,4 +509,35 @@ export const buildQuoteStandardFlatFieldMetadatas = ({
     twentyStandardApplicationId,
     now,
   }),
+  quoteLines: createStandardRelationFieldFlatMetadata({
+    objectName,
+    workspaceId,
+    context: {
+      type: FieldMetadataType.RELATION,
+      morphId: null,
+      fieldName: 'quoteLines',
+      label: i18nLabel(
+        msg({ message: `Quote Lines`, context: 'fieldMetadata.label' }),
+      ),
+      description: i18nLabel(
+        msg({
+          message: `Lines on this quote`,
+          context: 'fieldMetadata.description',
+        }),
+      ),
+      icon: 'IconListDetails',
+      isNullable: false,
+      isUIEditable: false,
+      isSystemSideEffect: true,
+      targetObjectName: 'quoteLine',
+      targetFieldName: 'quote',
+      settings: {
+        relationType: RelationType.ONE_TO_MANY,
+      },
+    },
+    standardObjectMetadataRelatedEntityIds,
+    dependencyFlatEntityMaps,
+    twentyStandardApplicationId,
+    now,
+  }),
 });

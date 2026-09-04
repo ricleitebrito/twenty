@@ -27,6 +27,7 @@ export {
 } from './standard-page-layout-config.type';
 export { STANDARD_PERSON_PAGE_LAYOUT_CONFIG } from './standard-person-page-layout.config';
 export { STANDARD_PRODUCT_PAGE_LAYOUT_CONFIG } from './standard-product-page-layout.config';
+export { STANDARD_QUOTE_LINE_PAGE_LAYOUT_CONFIG } from './standard-quote-line-page-layout.config';
 export { STANDARD_QUOTE_PAGE_LAYOUT_CONFIG } from './standard-quote-page-layout.config';
 export { STANDARD_TASK_PAGE_LAYOUT_CONFIG } from './standard-task-page-layout.config';
 export { STANDARD_WORKFLOW_AUTOMATED_TRIGGER_PAGE_LAYOUT_CONFIG } from './standard-workflow-automated-trigger-page-layout.config';
