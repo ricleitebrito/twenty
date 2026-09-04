@@ -1049,6 +1049,10 @@ If the real `database:reset`/GraphQL manual verification Phase 1's Task 6 attemp
 
 **Follow-up needed, likely alongside or before Phase 6 (frontend bulk-edit UX):** either (a) a dedicated bulk-recompute mutation/mechanism that can write differentiated per-record prices (design TBD — a new resolver, a batched set of individual updates issued by the frontend instead of one `updateMany` call, or a new pre-query-hook-adjacent mechanism this codebase doesn't have yet), or (b) an explicit product decision that bulk price-affecting changes always go one-at-a-time and the frontend's bulk-edit UI is designed around that constraint from the start. Not resolved by this plan — flagging here so Phase 6 doesn't rediscover this from scratch.
 
+## Upgrade command for existing workspaces (deferred to a follow-up Task 6, same pattern as Phase 1's Task 7)
+
+**Real, unlisted gap found by the final whole-branch review — not a silently-accepted deferral.** `Quote`/`QuoteLine` (and the reverse-relation fields added to `Opportunity`/`Company`/`Person`/`Product`/`Attachment`) only provision into brand-new workspaces (`synchronizeTwentyStandardApplicationOrThrow` runs exclusively at fresh workspace init). Existing workspaces get none of Phase 3 — and Phase 1's own `2-36/…-sync-quote-cpq-standard-objects.command.ts` cannot be reused for this, since it early-returns once `costTemplate` already exists (which it does, on any workspace that already ran Phase 1's backfill). A dedicated follow-up task, mirroring Phase 1's Task 7 process (dedicated implementer, dedicated task review, real-dev-DB dry-run verification) is required before this feature is usable on any pre-existing workspace. Sequenced as a follow-up task after this plan's fix wave, not bundled into it — the same reasoning Phase 1 used to keep its own upgrade command as a separate, fully-reviewed task rather than a quick fix-wave addition.
+
 ## Out of scope for this plan (deferred)
 
 - **`Quote.proposalTemplate`** — Phase 4, once `ProposalTemplate` exists.
