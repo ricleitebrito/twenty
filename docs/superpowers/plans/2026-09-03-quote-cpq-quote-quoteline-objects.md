@@ -1043,6 +1043,12 @@ If the real `database:reset`/GraphQL manual verification Phase 1's Task 6 attemp
 
 ---
 
+## Known limitation surfaced during Task 3 (tracked, not a silent gap)
+
+**`QuoteLine.updateMany` cannot express differentiated per-record pricing.** `UpdateManyResolverArgs.data` is a single object applied via one SQL `UPDATE` to every filtered record — there is no way for a pre-query hook to write a different `unitPrice`/`totalPrice` per matched line through the standard mutation mechanism. Task 3's `quote-line-update-many.pre-query.hook.ts` computes pricing for every matched record and only writes the uniform value when every matched record's computed price is IDENTICAL; otherwise it throws, telling the caller to update lines individually. This is the correct, data-safe choice given the constraint (never silently applies one line's price to a sibling line, never leaves a stale price with no signal), confirmed via independent review — but its practical consequence is that **the most common realistic CPQ bulk-edit action (a uniform discount-percent bump across QuoteLines on different products, which will almost always have different existing `unitPrice`s) will always be rejected** by `updateMany`.
+
+**Follow-up needed, likely alongside or before Phase 6 (frontend bulk-edit UX):** either (a) a dedicated bulk-recompute mutation/mechanism that can write differentiated per-record prices (design TBD — a new resolver, a batched set of individual updates issued by the frontend instead of one `updateMany` call, or a new pre-query-hook-adjacent mechanism this codebase doesn't have yet), or (b) an explicit product decision that bulk price-affecting changes always go one-at-a-time and the frontend's bulk-edit UI is designed around that constraint from the start. Not resolved by this plan — flagging here so Phase 6 doesn't rediscover this from scratch.
+
 ## Out of scope for this plan (deferred)
 
 - **`Quote.proposalTemplate`** — Phase 4, once `ProposalTemplate` exists.
